@@ -1,4 +1,4 @@
-import 'package:finalproject/auth/login_or_register.dart';
+import 'package:finalproject/auth/auth.dart';
 import 'package:finalproject/firebase_options.dart';
 import 'package:finalproject/theme/dark_mode.dart';
 import 'package:finalproject/theme/light_mode.dart';
@@ -23,7 +23,7 @@ class MyApp extends StatelessWidget {
       title: 'Handyman',
       theme: lightMode,
       darkTheme: darkMode,
-      home: const LoginOrRegister(),
+      home: const AuthPage(),
     );
   }
 }

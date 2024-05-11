@@ -1,4 +1,5 @@
 import 'package:finalproject/auth/login_or_register.dart';
+import 'package:finalproject/pages/homepage.dart';
 import 'package:finalproject/routes/app_routes.dart';
 import 'package:flutter/material.dart';
 
@@ -8,6 +9,11 @@ class AppRouter {
       case AppRoutes.homeLogin :
         return MaterialPageRoute(
           builder: (_) =>  const LoginOrRegister(),
+          settings: settings,
+        );
+        case AppRoutes.homePage :
+        return MaterialPageRoute(
+          builder: (_) =>  const HomePage(),
           settings: settings,
         );
       default: 
