@@ -5,6 +5,20 @@ class BookingPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Text('hey');
+    return Scaffold(
+          appBar: AppBar(
+    title: const Text('Booking Page'),
+          ),
+          body: const Center(
+    child: Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: <Widget>[
+        Text(
+          'Welcome to the Booking Page',
+        ),
+      ],
+    ),
+          ),
+        );
   }
 }

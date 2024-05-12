@@ -1,6 +1,6 @@
+import 'package:finalproject/auth/auth.dart';
 import 'package:finalproject/components/my_button.dart';
 import 'package:finalproject/components/my_textfield.dart';
-import 'package:finalproject/pages/homepage.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
 import 'package:flutter/material.dart';
@@ -36,7 +36,7 @@ class _LoginPageState extends State<LoginPage> {
         Navigator.of(context).pop(); // Close the loading dialog
         Navigator.pushReplacement(
           context,
-          MaterialPageRoute(builder: (context) => const HomePage()),
+          MaterialPageRoute(builder: (context) => const AuthPage()),
         );
       }
     } on FirebaseAuthException catch (e) {
