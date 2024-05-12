@@ -13,7 +13,7 @@ class BottomNavBar extends StatelessWidget {
       return [
         const HomePage(),
         const BookingPage(),
-         ProfilePage(),
+        const ProfilePage(),
       ];
     }
 

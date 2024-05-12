@@ -2,8 +2,10 @@ import 'package:finalproject/auth/auth.dart';
 import 'package:finalproject/firebase_options.dart';
 import 'package:finalproject/theme/dark_mode.dart';
 import 'package:finalproject/theme/light_mode.dart';
+import 'package:finalproject/view_models/profile_cubit/profile_cubit.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -18,12 +20,19 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      title: 'Handyman',
-      theme: lightMode,
-      darkTheme: darkMode,
-      home: const AuthPage(),
+    return BlocProvider(
+      create: (context) {
+        final cubit = ProfileCubit();
+        cubit.getProfile();
+        return cubit;
+      },
+      child: MaterialApp(
+        debugShowCheckedModeBanner: false,
+        title: 'Handyman',
+        theme: lightMode,
+        darkTheme: darkMode,
+        home: const AuthPage(),
+      ),
     );
   }
 }

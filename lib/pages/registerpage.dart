@@ -73,7 +73,7 @@ class _RegisterPageState extends State<RegisterPage> {
           .set({
         'username': usernameController.text,
         'email': emailController.text,
-        'image_url': imageUrl,
+        'imageUrl': imageUrl,
         'role': 'customer', // Set the user role to 'customer'
       });
 

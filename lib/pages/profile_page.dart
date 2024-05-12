@@ -1,20 +1,11 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:finalproject/components/profile_page_fields.dart';
+import 'package:finalproject/view_models/profile_cubit/profile_cubit.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 class ProfilePage extends StatelessWidget {
-  ProfilePage({super.key});
-  final User? currentUser = FirebaseAuth.instance.currentUser;
-
-  Future<DocumentSnapshot<Map<String, dynamic>>> getUserData() async {
-    final user = FirebaseAuth.instance.currentUser;
-    final userData = await FirebaseFirestore.instance
-        .collection('users')
-        .doc(user!.uid)
-        .get();
-    return userData;
-  }
+  const ProfilePage({super.key});
 
   Future<void> logout() async {
     await FirebaseAuth.instance.signOut();
@@ -22,32 +13,36 @@ class ProfilePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder(
-      future: getUserData(),
-      builder: (context, snapshot) {
-        if (snapshot.connectionState == ConnectionState.waiting) {
+    return BlocBuilder<ProfileCubit, ProfileState>(
+      builder: (context, state) {
+        if (state is ProfileInitial) {
           return const Center(
             child: CircularProgressIndicator.adaptive(),
           );
-        } else {
-          Map<String, dynamic>? userData = snapshot.data!.data();
+        }
+        if (state is ProfileLoading) {
+          return const Center(
+            child: CircularProgressIndicator.adaptive(),
+          );
+        }
+        if (state is ProfileLoaded) {
           return Scaffold(
             body: Column(
               children: [
                 const SizedBox(height: 150),
                 CircleAvatar(
                   radius: 50,
-                  backgroundImage: NetworkImage(userData!['image_url']),
+                  backgroundImage: NetworkImage(state.profile.imageUrl),
                 ),
                 const SizedBox(height: 10),
                 Text(
-                  userData['username'],
+                  state.profile.username,
                   style: Theme.of(context).textTheme.titleLarge!.copyWith(
                         fontWeight: FontWeight.bold,
                       ),
                 ),
                 Text(
-                  userData['email'],
+                  state.profile.email,
                   style: Theme.of(context).textTheme.labelLarge!.copyWith(
                         color: Colors.grey[600],
                         fontWeight: FontWeight.w500,
@@ -116,6 +111,10 @@ class ProfilePage extends StatelessWidget {
                 ),
               ],
             ),
+          );
+        } else {
+          return const Center(
+            child: Text('Error'),
           );
         }
       },
