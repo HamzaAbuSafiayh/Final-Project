@@ -65,7 +65,7 @@ class WorkerCard extends StatelessWidget {
               ),
               Text(
                 'Location: $location',
-                style: TextStyle(
+                style: const TextStyle(
                     color: Colors.black38,
                     fontSize: 14,
                     fontWeight: FontWeight.bold),

@@ -2,6 +2,7 @@ import 'package:finalproject/pages/booking_page.dart';
 import 'package:finalproject/pages/homepage.dart';
 import 'package:finalproject/pages/profile_page.dart';
 import 'package:finalproject/view_models/profile_cubit/profile_cubit.dart';
+import 'package:finalproject/view_models/workers_cubit/workers_cubit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:persistent_bottom_nav_bar/persistent_tab_view.dart';
@@ -14,7 +15,14 @@ class BottomNavBar extends StatelessWidget {
     List<Widget> buildScreens() {
       return [
         const HomePage(),
-        const BookingPage(),
+        BlocProvider(
+          create: (context) {
+            final cubit = WorkersCubit();
+            cubit.getWorkers();
+            return cubit;
+          },
+          child: const BookingPage(),
+        ),
         BlocProvider(
           create: (context) {
             final cubit = ProfileCubit();

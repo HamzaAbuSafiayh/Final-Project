@@ -41,7 +41,7 @@ class BookingPage extends StatelessWidget {
                           imageUrl: state.profile.imageUrl,
                           name: state.profile.username,
                           job: worker.job,
-                          rating: 4.5,
+                          rating: worker.sumofratings,
                           reviews: worker.reviews,
                           location: worker.location,
                         );
