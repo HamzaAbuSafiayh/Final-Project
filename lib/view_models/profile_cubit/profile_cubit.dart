@@ -16,4 +16,14 @@ class ProfileCubit extends Cubit<ProfileState> {
       emit(ProfileError(e.toString()));
     }
   }
+
+  void getProfileWorker(String id) async {
+    emit(ProfileLoading());
+    try {
+      final UserModel user = await profileServices.getProfileWorker(id);
+      emit(ProfileLoaded(user));
+    } catch (e) {
+      emit(ProfileError(e.toString()));
+    }
+  }
 }
