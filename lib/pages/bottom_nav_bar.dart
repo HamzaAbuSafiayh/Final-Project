@@ -1,6 +1,7 @@
 import 'package:finalproject/pages/booking_page.dart';
 import 'package:finalproject/pages/homepage.dart';
 import 'package:finalproject/pages/profile_page.dart';
+import 'package:finalproject/view_models/categories_cubit/categories_cubit.dart';
 import 'package:finalproject/view_models/profile_cubit/profile_cubit.dart';
 import 'package:finalproject/view_models/workers_cubit/workers_cubit.dart';
 import 'package:flutter/material.dart';
@@ -14,7 +15,14 @@ class BottomNavBar extends StatelessWidget {
   Widget build(BuildContext context) {
     List<Widget> buildScreens() {
       return [
-        const HomePage(),
+        BlocProvider(
+          create: (context) {
+            final cubit = CategoriesCubit();
+            cubit.getCategories();
+            return cubit;
+          },
+          child: const HomePage(),
+        ),
         BlocProvider(
           create: (context) {
             final cubit = WorkersCubit();
