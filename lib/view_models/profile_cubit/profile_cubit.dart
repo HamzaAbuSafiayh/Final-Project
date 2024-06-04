@@ -10,7 +10,7 @@ class ProfileCubit extends Cubit<ProfileState> {
   void getProfile() async {
     emit(ProfileLoading());
     try {
-      final UserModel user = await profileServices.getProfile(); 
+      final UserModel user = await profileServices.getProfile();
       emit(ProfileLoaded(user));
     } catch (e) {
       emit(ProfileError(e.toString()));
@@ -18,6 +18,7 @@ class ProfileCubit extends Cubit<ProfileState> {
   }
 
   void getProfileWorker(String id) async {
+    if (isClosed) return;
     emit(ProfileLoading());
     try {
       final UserModel user = await profileServices.getProfileWorker(id);

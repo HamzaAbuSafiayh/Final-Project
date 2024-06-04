@@ -1,6 +1,10 @@
+import 'package:finalproject/auth/login_or_register.dart';
+import 'package:finalproject/routes/app_routes.dart';
 import 'package:finalproject/view_models/categories_cubit/categories_cubit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -11,6 +15,49 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   String searchQuery = '';
+
+  @override
+  void initState() {
+    super.initState();
+    // Add a listener to check user status
+    checkUserStatus();
+  }
+
+  void checkUserStatus() async {
+    User? currentUser = FirebaseAuth.instance.currentUser;
+
+    if (currentUser == null) {
+      // User is not signed in, navigate to the login or register screen
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (_) => const LoginOrRegister()),
+      );
+      return;
+    }
+
+    try {
+      // Check if the user exists in Firestore
+      DocumentSnapshot userDoc = await FirebaseFirestore.instance
+          .collection('users')
+          .doc(currentUser.uid)
+          .get();
+
+      if (!userDoc.exists) {
+        // User does not exist in Firestore, sign them out and navigate to the login or register screen
+        await FirebaseAuth.instance.signOut();
+        Future.delayed(Duration.zero, () {
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(builder: (_) => const LoginOrRegister()),
+          );
+        });
+      }
+    } catch (e) {
+      // Handle any errors
+      debugPrint(e.toString());
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -90,7 +137,13 @@ class _HomePageState extends State<HomePage> {
                         return Padding(
                           padding: const EdgeInsets.all(2.0),
                           child: InkWell(
-                            onTap: () {},
+                            onTap: () {
+                              Navigator.pushNamed(
+                                context,
+                                AppRoutes.categoryWorkers,
+                                arguments: filteredCategories[index],
+                              );
+                            },
                             child: Column(
                               children: [
                                 ClipRRect(

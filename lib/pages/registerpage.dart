@@ -20,14 +20,12 @@ class RegisterPage extends StatefulWidget {
 
 class _RegisterPageState extends State<RegisterPage> {
   final TextEditingController usernameController = TextEditingController();
-
   final TextEditingController emailController = TextEditingController();
-
   final TextEditingController passwordController = TextEditingController();
-
   final TextEditingController confirmPasswordController =
       TextEditingController();
   Uint8List? _image;
+
   void selectImage() async {
     Uint8List image = await pickImage(ImageSource.gallery);
     setState(() {
@@ -40,60 +38,68 @@ class _RegisterPageState extends State<RegisterPage> {
       context: context,
       builder: (context) =>
           const Center(child: CircularProgressIndicator.adaptive()),
+      barrierDismissible:
+          false, // Prevents dismissing the dialog by tapping outside
     );
 
     if (passwordController.text != confirmPasswordController.text) {
-      if (mounted) {
-        Navigator.pop(context);
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('Passwords do not match.'),
-            backgroundColor: Colors.red,
-          ),
-        );
-      }
-      return;
-    }
-
-    try {
-      // Register user with Firebase Auth
-      UserCredential userCredential =
-          await FirebaseAuth.instance.createUserWithEmailAndPassword(
-        email: emailController.text,
-        password: passwordController.text,
+      Navigator.pop(context);
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Passwords do not match.'),
+          backgroundColor: Colors.red,
+        ),
       );
 
-      // Upload image to Firebase Storage and get the URL
-      String imageUrl = await uploadImageToFirebase(_image);
-
-      // Save user details to Firestore
-      await FirebaseFirestore.instance
-          .collection('users')
-          .doc(userCredential.user!.uid)
-          .set({
-        'username': usernameController.text,
-        'email': emailController.text,
-        'imageUrl': imageUrl,
-        'role': 'customer', // Set the user role to 'customer'
-      });
-
-      if (mounted) {
-        Navigator.pop(context); // Close the progress dialog
-        Navigator.pushReplacement(
-            context,
-            MaterialPageRoute(
-                builder: (_) =>
-                    const HomePage())); // Navigate to home page or other suitable page
-      }
-    } catch (e) {
-      if (mounted) {
-        Navigator.pop(context);
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text(e.toString()),
-            backgroundColor: Colors.red,
-          ),
+      return;
+    } else {
+      try {
+        // Register user with Firebase Auth
+        UserCredential userCredential =
+            await FirebaseAuth.instance.createUserWithEmailAndPassword(
+          email: emailController.text,
+          password: passwordController.text,
         );
+        if (mounted) {
+          Navigator.pop(context);
+        }
+        // Use default image URL if no image is selected
+        String imageUrl;
+        if (_image == null) {
+          imageUrl =
+              'https://static-00.iconduck.com/assets.00/profile-default-icon-2048x2045-u3j7s5nj.png';
+        } else {
+          // Upload image to Firebase Storage and get the URL
+          imageUrl = await uploadImageToFirebase(_image);
+        }
+
+        // Save user details to Firestore
+        await FirebaseFirestore.instance
+            .collection('users')
+            .doc(userCredential.user!.uid)
+            .set({
+          'username': usernameController.text,
+          'email': emailController.text,
+          'imageUrl': imageUrl,
+          'role': 'customer', // Set the user role to 'customer'
+        });
+
+        if (mounted) {
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(builder: (_) => const HomePage()),
+          ); // Navigate to home page or other suitable page
+        }
+      } catch (e) {
+        if (mounted) {
+          Navigator.pop(context);
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text(e.toString()),
+              backgroundColor: Colors.red,
+            ),
+          );
+        }
       }
     }
   }

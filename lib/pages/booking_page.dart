@@ -15,7 +15,11 @@ class BookingPage extends StatelessWidget {
       ),
       body: BlocBuilder<WorkersCubit, WorkersState>(
         builder: (context, state) {
-          if (state is WorkersLoading) {
+          if (state is WorkersInitial) {
+            return const Center(
+              child: CircularProgressIndicator(),
+            );
+          } else if (state is WorkersLoading) {
             return const Center(
               child: CircularProgressIndicator(),
             );
@@ -32,7 +36,11 @@ class BookingPage extends StatelessWidget {
                   },
                   child: BlocBuilder<ProfileCubit, ProfileState>(
                     builder: (context, state) {
-                      if (state is ProfileLoading) {
+                      if (state is ProfileInitial) {
+                        return const Center(
+                          child: CircularProgressIndicator(),
+                        );
+                      } else if (state is ProfileLoading) {
                         return const Center(
                           child: CircularProgressIndicator(),
                         );

@@ -1,5 +1,5 @@
 import 'package:finalproject/auth/login_or_register.dart';
-import 'package:finalproject/pages/bottom_nav_bar.dart';
+import 'package:finalproject/pages/new_bottom_nav_bar.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
@@ -13,7 +13,7 @@ class AuthPage extends StatelessWidget {
         stream: FirebaseAuth.instance.authStateChanges(),
         builder: (context, snapshot) {
           if (snapshot.hasData) {
-            return const BottomNavBar();
+            return const BottomNavBarNew();
           } else {
             return const LoginOrRegister();
           }

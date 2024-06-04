@@ -1,4 +1,5 @@
 import 'package:finalproject/auth/login_or_register.dart';
+import 'package:finalproject/pages/category_workers.dart';
 import 'package:finalproject/pages/homepage.dart';
 import 'package:finalproject/routes/app_routes.dart';
 import 'package:flutter/material.dart';
@@ -6,17 +7,22 @@ import 'package:flutter/material.dart';
 class AppRouter {
   static Route<dynamic> onGenerateRoute(RouteSettings settings) {
     switch (settings.name) {
-      case AppRoutes.homeLogin :
+      case AppRoutes.homeLogin:
         return MaterialPageRoute(
-          builder: (_) =>  const LoginOrRegister(),
+          builder: (_) => const LoginOrRegister(),
           settings: settings,
         );
-        case AppRoutes.homePage :
+      case AppRoutes.homePage:
         return MaterialPageRoute(
-          builder: (_) =>  const HomePage(),
+          builder: (_) => const HomePage(),
           settings: settings,
         );
-      default: 
+      case AppRoutes.categoryWorkers:
+        return MaterialPageRoute(
+          builder: (_) => const CategoryWorkers(),
+          settings: settings,
+        );
+      default:
         return MaterialPageRoute(
           builder: (_) => const Scaffold(
             body: Center(

@@ -1,5 +1,6 @@
 import 'package:finalproject/auth/auth.dart';
 import 'package:finalproject/firebase_options.dart';
+import 'package:finalproject/routes/app_router.dart';
 import 'package:finalproject/theme/dark_mode.dart';
 import 'package:finalproject/theme/light_mode.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -20,6 +21,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
+      onGenerateRoute: AppRouter.onGenerateRoute,
       title: 'Handyman',
       theme: lightMode,
       darkTheme: darkMode,
