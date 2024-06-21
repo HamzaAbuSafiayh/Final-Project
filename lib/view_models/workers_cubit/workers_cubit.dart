@@ -17,4 +17,13 @@ class WorkersCubit extends Cubit<WorkersState> {
       emit(WorkersError(e.toString()));
     }
   }
+  void getWorkersByCat(String categroy) async{
+    emit(WorkersLoading());
+    try { 
+      final List<WorkerModel> workers = await workerServices.getWorkersByCat(categroy);
+      emit(WorkersLoaded(workers));
+    } catch (e) {
+      emit(WorkersError(e.toString()));
+    }
+  }
 }

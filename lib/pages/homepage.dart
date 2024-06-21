@@ -141,7 +141,7 @@ class _HomePageState extends State<HomePage> {
                               Navigator.pushNamed(
                                 context,
                                 AppRoutes.categoryWorkers,
-                                arguments: filteredCategories[index],
+                                arguments: filteredCategories[index].name,
                               );
                             },
                             child: Column(
