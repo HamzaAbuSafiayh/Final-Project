@@ -22,7 +22,7 @@ class _LoginPageState extends State<LoginPage> {
       context: context,
       barrierDismissible: false, // Prevent dialog from closing on tap outside
       builder: (BuildContext context) {
-        return const Center(child: CircularProgressIndicator());
+        return const Center(child: (CircularProgressIndicator.adaptive()));
       },
     );
 

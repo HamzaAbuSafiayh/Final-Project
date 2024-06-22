@@ -67,27 +67,42 @@ class ProfilePage extends StatelessWidget {
                   ),
                 ),
                 const SizedBox(height: 10),
-                const Column(
+                Column(
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
                     ProfileField(
-                      icon: Icon(Icons.notifications),
+                      icon: Icon(
+                        Icons.notifications,
+                        color: Theme.of(context).colorScheme.secondary,
+                      ),
                       title: 'Notifications',
                     ),
                     ProfileField(
-                      icon: Icon(Icons.favorite),
+                      icon: Icon(
+                        Icons.favorite,
+                        color: Theme.of(context).colorScheme.secondary,
+                      ),
                       title: 'Favorites',
                     ),
                     ProfileField(
-                      icon: Icon(Icons.shopping_cart),
+                      icon: Icon(
+                        Icons.shopping_cart,
+                        color: Theme.of(context).colorScheme.secondary,
+                      ),
                       title: 'Cart',
                     ),
                     ProfileField(
-                      icon: Icon(Icons.settings),
+                      icon: Icon(
+                        Icons.settings,
+                        color: Theme.of(context).colorScheme.secondary,
+                      ),
                       title: 'Settings',
                     ),
                     ProfileField(
-                      icon: Icon(Icons.help),
+                      icon: Icon(
+                        Icons.help,
+                        color: Theme.of(context).colorScheme.secondary,
+                      ),
                       title: 'Help',
                     ),
                   ],
