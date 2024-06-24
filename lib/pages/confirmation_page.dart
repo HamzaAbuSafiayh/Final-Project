@@ -1,7 +1,7 @@
 import 'package:finalproject/models/user_model.dart';
 import 'package:finalproject/models/worker_model.dart';
 import 'package:finalproject/routes/app_routes.dart';
-// import 'package:finalproject/services/order_services.dart';
+import 'package:finalproject/services/order_services.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
@@ -10,7 +10,7 @@ class ConfirmationPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // final orderservices = OrderServiceImpl();
+    final orderservices = OrderServiceImpl();
     final Map arguments = ModalRoute.of(context)!.settings.arguments as Map;
     final selectedTime = arguments['selectedTime'] as TimeOfDay;
     final selectedDate = arguments['selectedDate'] as DateTime;
@@ -211,8 +211,8 @@ class ConfirmationPage extends StatelessWidget {
             Center(
               child: ElevatedButton(
                 onPressed: () async {
-                  // orderservices.createOrder(worker, selectedDate.toString(),
-                  //     selectedTime.format(context));
+                  orderservices.createOrder(worker, selectedDate.toString(),
+                      selectedTime.format(context));
                   Navigator.of(context).pushNamed(AppRoutes.completion);
                 },
                 style: ElevatedButton.styleFrom(

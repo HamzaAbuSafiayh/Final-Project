@@ -6,4 +6,5 @@ class AppRoutes {
   static const String confirmation = '/confirmation';
   static const String completion = '/completion';
   static const String chat = '/chat';
+  static const String tasks = '/tasks';
 }

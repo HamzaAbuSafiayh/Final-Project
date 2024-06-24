@@ -1,6 +1,7 @@
 import 'package:finalproject/pages/chats_page.dart';
 import 'package:finalproject/pages/homepage.dart';
 import 'package:finalproject/pages/profile_page.dart';
+import 'package:finalproject/pages/orders_page.dart';
 import 'package:finalproject/view_models/categories_cubit/categories_cubit.dart';
 import 'package:finalproject/view_models/profile_cubit/profile_cubit.dart';
 import 'package:finalproject/view_models/workers_cubit/workers_cubit.dart';
@@ -48,6 +49,10 @@ class _BottomNavBarNewState extends State<BottomNavBarNew> {
             label: 'Chats',
           ),
           NavigationDestination(
+            icon: Icon(Icons.cases_outlined),
+            label: 'Orders',
+          ),
+          NavigationDestination(
             icon: Icon(Icons.person),
             label: 'Profile',
           ),
@@ -73,6 +78,7 @@ class _BottomNavBarNewState extends State<BottomNavBarNew> {
             },
             child: const ChatsListPage(),
           ),
+          const OrdersPage(),
           BlocProvider(
             create: (context) {
               final cubit = ProfileCubit();

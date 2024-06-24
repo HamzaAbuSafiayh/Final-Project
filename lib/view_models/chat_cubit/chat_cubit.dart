@@ -15,9 +15,28 @@ class ChatCubit extends Cubit<ChatState> {
 
   void getMessages(String userId, String workerId) async {
     emit(ChatLoading());
+
     try {
-      _chatSubscription = FirebaseFirestore.instance
+      bool firstPathHasData = false;
+
+      // Check the first path
+      var firstPathSnapshot = await FirebaseFirestore.instance
           .collection(ApiPaths.messages(userId, workerId))
+          .limit(1)
+          .get();
+
+      if (firstPathSnapshot.docs.isNotEmpty) {
+        firstPathHasData = true;
+      }
+
+      // Determine the correct path based on the presence of data
+      String correctPath = firstPathHasData
+          ? ApiPaths.messages(userId, workerId)
+          : ApiPaths.messages(workerId, userId);
+
+      // Listen to the determined path
+      _chatSubscription = FirebaseFirestore.instance
+          .collection(correctPath)
           .orderBy('timestamp')
           .snapshots()
           .listen((snapshot) {

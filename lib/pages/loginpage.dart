@@ -79,7 +79,7 @@ class _LoginPageState extends State<LoginPage> {
                     size: 80,
                   ),
                   const SizedBox(height: 20),
-                  const Text('A P P N A M E', style: TextStyle(fontSize: 20)),
+                  const Text('H A N D Y P R O', style: TextStyle(fontSize: 20)),
                   const SizedBox(height: 50),
                   MyTextField(
                       hintText: 'Email',

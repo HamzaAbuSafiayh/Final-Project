@@ -19,16 +19,22 @@ class ChatsListPage extends StatelessWidget {
         future: ChatRoomServicesImpl().getChatRooms(userId),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
-            return const Center(child: CircularProgressIndicator());
+            return const Center(child: CircularProgressIndicator.adaptive());
           }
           if (snapshot.hasError) {
             return Center(child: Text('Error: ${snapshot.error}'));
           }
           final chatRooms = snapshot.data ?? [];
           if (chatRooms.isEmpty) {
-            return const Center(child: Text('No chats available'));
+            return const Center(
+              child: Text(
+                'No chats available',
+                style: TextStyle(fontSize: 18, fontWeight: FontWeight.w500),
+              ),
+            );
           }
           return ListView.builder(
+            padding: const EdgeInsets.all(8.0),
             itemCount: chatRooms.length,
             itemBuilder: (context, index) {
               final chatRoom = chatRooms[index];

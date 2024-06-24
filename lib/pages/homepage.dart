@@ -19,7 +19,6 @@ class _HomePageState extends State<HomePage> {
   @override
   void initState() {
     super.initState();
-    // Add a listener to check user status
     checkUserStatus();
   }
 
@@ -27,7 +26,6 @@ class _HomePageState extends State<HomePage> {
     User? currentUser = FirebaseAuth.instance.currentUser;
 
     if (currentUser == null) {
-      // User is not signed in, navigate to the login or register screen
       Navigator.pushReplacement(
         context,
         MaterialPageRoute(builder: (_) => const LoginOrRegister()),
@@ -36,14 +34,12 @@ class _HomePageState extends State<HomePage> {
     }
 
     try {
-      // Check if the user exists in Firestore
       DocumentSnapshot userDoc = await FirebaseFirestore.instance
           .collection('users')
           .doc(currentUser.uid)
           .get();
 
       if (!userDoc.exists) {
-        // User does not exist in Firestore, sign them out and navigate to the login or register screen
         await FirebaseAuth.instance.signOut();
         Future.delayed(Duration.zero, () {
           Navigator.pushReplacement(
@@ -53,32 +49,31 @@ class _HomePageState extends State<HomePage> {
         });
       }
     } catch (e) {
-      // Handle any errors
       debugPrint(e.toString());
     }
   }
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+
     return Scaffold(
       appBar: AppBar(
         leading: const Icon(
           Icons.location_on,
           size: 35,
         ),
-        actions: const [
-          Padding(
-            padding: EdgeInsets.only(right: 10.0),
-            child: Icon(
-              Icons.search,
-              size: 25,
-            ),
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.search, size: 25),
+            onPressed: () {},
           )
         ],
         title: const Text(
           'Tulkarm City',
           style: TextStyle(
-            fontSize: 17,
+            fontSize: 20,
+            fontWeight: FontWeight.bold,
           ),
         ),
       ),
@@ -95,20 +90,20 @@ class _HomePageState extends State<HomePage> {
             }).toList();
 
             return Padding(
-              padding: const EdgeInsets.all(12.0),
+              padding: const EdgeInsets.all(16.0),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   const SizedBox(height: 25),
-                  const Text(
+                  Text(
                     'I need help with',
-                    style: TextStyle(fontSize: 30),
+                    style: theme.textTheme.headlineMedium?.copyWith(
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
                   const SizedBox(height: 10),
                   TextField(
-                    style: const TextStyle(
-                      fontSize: 13,
-                    ),
+                    style: theme.textTheme.bodyLarge,
                     decoration: InputDecoration(
                       hintText: 'Search...',
                       prefixIcon: const Icon(Icons.search),
@@ -128,38 +123,48 @@ class _HomePageState extends State<HomePage> {
                       itemCount: filteredCategories.length,
                       gridDelegate:
                           const SliverGridDelegateWithFixedCrossAxisCount(
-                        childAspectRatio: 1,
-                        mainAxisSpacing: 2,
-                        crossAxisSpacing: 2,
+                        childAspectRatio: 0.78,
+                        mainAxisSpacing: 16,
+                        crossAxisSpacing: 10,
                         crossAxisCount: 3,
                       ),
                       itemBuilder: (context, index) {
-                        return Padding(
-                          padding: const EdgeInsets.all(2.0),
-                          child: InkWell(
-                            onTap: () {
-                              Navigator.pushNamed(
-                                context,
-                                AppRoutes.categoryWorkers,
-                                arguments: filteredCategories[index].name,
-                              );
-                            },
+                        return InkWell(
+                          onTap: () {
+                            Navigator.pushNamed(
+                              context,
+                              AppRoutes.categoryWorkers,
+                              arguments: filteredCategories[index].name,
+                            );
+                          },
+                          child: Container(
+                            decoration: BoxDecoration(
+                              color: theme.colorScheme.surface,
+                              borderRadius: BorderRadius.circular(15),
+                            ),
                             child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.stretch,
                               children: [
                                 ClipRRect(
-                                  borderRadius: BorderRadius.circular(10),
+                                  borderRadius: const BorderRadius.vertical(
+                                      top: Radius.circular(15)),
                                   child: Image.network(
                                     filteredCategories[index].imageUrl,
                                     fit: BoxFit.cover,
                                     height: 100,
-                                    width: 150,
                                   ),
                                 ),
-                                Text(
-                                  filteredCategories[index].name,
-                                  style: const TextStyle(
-                                    fontWeight: FontWeight.bold,
-                                    fontSize: 14,
+                                Padding(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: Center(
+                                    child: Text(
+                                      filteredCategories[index].name,
+                                      style:
+                                          theme.textTheme.titleMedium?.copyWith(
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                      textAlign: TextAlign.center,
+                                    ),
                                   ),
                                 ),
                               ],

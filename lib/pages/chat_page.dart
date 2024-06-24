@@ -16,7 +16,7 @@ class ChatPage extends StatelessWidget {
       create: (context) => ChatCubit()..getMessages(userId, workerId),
       child: Scaffold(
         appBar: AppBar(
-          title: const Text('Chat with Worker'),
+          title: const Text('Chat Order Room'),
           leading: IconButton(
             icon: const Icon(Icons.arrow_back),
             onPressed: () {
@@ -31,13 +31,14 @@ class ChatPage extends StatelessWidget {
                 listener: (context, state) {
                   if (state is ChatError) {
                     ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(content: Text('error')),
+                      const SnackBar(content: Text('Error loading messages')),
                     );
                   }
                 },
                 builder: (context, state) {
                   if (state is ChatLoading) {
-                    return const Center(child: CircularProgressIndicator());
+                    return const Center(
+                        child: CircularProgressIndicator.adaptive());
                   } else if (state is ChatLoaded) {
                     return ListView.builder(
                       padding: const EdgeInsets.all(8.0),
@@ -58,9 +59,23 @@ class ChatPage extends StatelessWidget {
                                   MediaQuery.of(context).size.width * 0.75,
                             ),
                             decoration: BoxDecoration(
-                              color:
-                                  isSentByMe ? Colors.blue : Colors.grey[300],
-                              borderRadius: BorderRadius.circular(8.0),
+                              gradient: LinearGradient(
+                                colors: isSentByMe
+                                    ? [Colors.blue, Colors.blueAccent]
+                                    : [Colors.grey[300]!, Colors.grey[400]!],
+                                begin: Alignment.topLeft,
+                                end: Alignment.bottomRight,
+                              ),
+                              borderRadius: BorderRadius.only(
+                                topLeft: const Radius.circular(12.0),
+                                topRight: const Radius.circular(12.0),
+                                bottomLeft: isSentByMe
+                                    ? const Radius.circular(12.0)
+                                    : const Radius.circular(0),
+                                bottomRight: isSentByMe
+                                    ? const Radius.circular(0)
+                                    : const Radius.circular(12.0),
+                              ),
                             ),
                             child: Text(
                               message.message,
@@ -94,9 +109,10 @@ class ChatPage extends StatelessWidget {
                           borderSide: BorderSide.none,
                         ),
                         filled: true,
+                        fillColor: Theme.of(context).colorScheme.surface,
                         contentPadding: const EdgeInsets.symmetric(
                           horizontal: 16,
-                          vertical: 0,
+                          vertical: 12,
                         ),
                       ),
                     ),

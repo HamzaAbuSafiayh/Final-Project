@@ -1,4 +1,5 @@
 import 'package:finalproject/components/profile_page_fields.dart';
+import 'package:finalproject/routes/app_routes.dart';
 import 'package:finalproject/view_models/profile_cubit/profile_cubit.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -26,110 +27,169 @@ class ProfilePage extends StatelessWidget {
           );
         }
         if (state is ProfileLoaded) {
+          List<Widget> profileFields = [
+            ProfileField(
+              onTap: () {},
+              icon: Icon(
+                Icons.notifications,
+                color: Theme.of(context).colorScheme.secondary,
+              ),
+              title: 'Notifications',
+            ),
+            ProfileField(
+              onTap: () {},
+              icon: Icon(
+                Icons.favorite,
+                color: Theme.of(context).colorScheme.secondary,
+              ),
+              title: 'Favorites',
+            ),
+            ProfileField(
+              onTap: () {},
+              icon: Icon(
+                Icons.shopping_cart,
+                color: Theme.of(context).colorScheme.secondary,
+              ),
+              title: 'Cart',
+            ),
+            ProfileField(
+              onTap: () {},
+              icon: Icon(
+                Icons.settings,
+                color: Theme.of(context).colorScheme.secondary,
+              ),
+              title: 'Settings',
+            ),
+            ProfileField(
+              onTap: () {},
+              icon: Icon(
+                Icons.help,
+                color: Theme.of(context).colorScheme.secondary,
+              ),
+              title: 'Help',
+            ),
+          ];
+
+          // Adding the Tasks field if the user role is 'worker'
+          if (state.profile.role == 'worker') {
+            profileFields.add(ProfileField(
+              onTap: () {
+                Navigator.of(context).pushNamed(AppRoutes.tasks);
+              },
+              icon: Icon(
+                Icons.work,
+                color: Theme.of(context).colorScheme.secondary,
+              ),
+              title: 'Tasks',
+            ));
+          }
+
           return Scaffold(
-            body: Column(
+            body: Stack(
               children: [
-                const SizedBox(height: 150),
-                CircleAvatar(
-                  radius: 50,
-                  backgroundImage: NetworkImage(state.profile.imageUrl),
-                ),
-                const SizedBox(height: 10),
-                Text(
-                  state.profile.username,
-                  style: Theme.of(context).textTheme.titleLarge!.copyWith(
-                        fontWeight: FontWeight.bold,
-                      ),
-                ),
-                Text(
-                  state.profile.email,
-                  style: Theme.of(context).textTheme.labelLarge!.copyWith(
-                        color: Colors.grey[600],
-                        fontWeight: FontWeight.w500,
-                      ),
-                ),
-                const SizedBox(height: 10),
-                SizedBox(
-                  width: 200,
-                  child: ElevatedButton(
-                    style: ButtonStyle(
-                      backgroundColor: MaterialStateProperty.all(
+                Container(
+                  height: 300,
+                  decoration: BoxDecoration(
+                    gradient: LinearGradient(
+                      colors: [
                         Theme.of(context).colorScheme.primary,
-                      ),
-                    ),
-                    onPressed: () {},
-                    child: Text(
-                      'Edit Profile',
-                      style: TextStyle(
-                        color: Theme.of(context).textTheme.bodyLarge!.color,
-                      ),
+                        Theme.of(context).colorScheme.inversePrimary,
+                      ],
+                      begin: Alignment.topLeft,
+                      end: Alignment.bottomRight,
                     ),
                   ),
                 ),
-                const SizedBox(height: 10),
                 Column(
-                  crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    ProfileField(
-                      icon: Icon(
-                        Icons.notifications,
-                        color: Theme.of(context).colorScheme.secondary,
-                      ),
-                      title: 'Notifications',
+                    const SizedBox(height: 120),
+                    CircleAvatar(
+                      radius: 50,
+                      backgroundImage: NetworkImage(state.profile.imageUrl),
+                      backgroundColor: Colors.white,
+                      child: state.profile.imageUrl.isEmpty
+                          ? Icon(
+                              Icons.person,
+                              size: 50,
+                              color: Colors.grey[400],
+                            )
+                          : null,
                     ),
-                    ProfileField(
-                      icon: Icon(
-                        Icons.favorite,
-                        color: Theme.of(context).colorScheme.secondary,
-                      ),
-                      title: 'Favorites',
+                    const SizedBox(height: 10),
+                    Text(
+                      state.profile.username,
+                      style:
+                          Theme.of(context).textTheme.headlineSmall?.copyWith(
+                                fontWeight: FontWeight.bold,
+                                color: Colors.white,
+                              ),
                     ),
-                    ProfileField(
-                      icon: Icon(
-                        Icons.shopping_cart,
-                        color: Theme.of(context).colorScheme.secondary,
-                      ),
-                      title: 'Cart',
+                    Text(
+                      state.profile.email,
+                      style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                            color: Colors.white70,
+                          ),
                     ),
-                    ProfileField(
-                      icon: Icon(
-                        Icons.settings,
-                        color: Theme.of(context).colorScheme.secondary,
+                    const SizedBox(height: 20),
+                    SizedBox(
+                      width: 200,
+                      child: ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(30.0),
+                          ),
+                          padding: const EdgeInsets.symmetric(vertical: 15),
+                          backgroundColor:
+                              Theme.of(context).colorScheme.surface,
+                        ),
+                        onPressed: () {},
+                        child: Text(
+                          'Edit Profile',
+                          style: TextStyle(
+                            color: Theme.of(context).colorScheme.onSurface,
+                          ),
+                        ),
                       ),
-                      title: 'Settings',
                     ),
-                    ProfileField(
-                      icon: Icon(
-                        Icons.help,
-                        color: Theme.of(context).colorScheme.secondary,
+                    const SizedBox(height: 20),
+                    Expanded(
+                      child: ListView(
+                        padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                        children: profileFields,
                       ),
-                      title: 'Help',
                     ),
+                    const SizedBox(height: 10),
+                    SizedBox(
+                      width: 200,
+                      child: ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(30.0),
+                          ),
+                          padding: const EdgeInsets.symmetric(vertical: 15),
+                          backgroundColor:
+                              Theme.of(context).colorScheme.surface,
+                        ),
+                        onPressed: () {
+                          logout();
+                        },
+                        child: Text(
+                          'Logout',
+                          style: TextStyle(
+                            color: Theme.of(context).colorScheme.onSurface,
+                          ),
+                        ),
+                      ),
+                    ),
+                    const SizedBox(height: 20),
                   ],
-                ),
-                const SizedBox(height: 10),
-                ElevatedButton(
-                  style: ButtonStyle(
-                    backgroundColor: MaterialStateProperty.all(
-                      Theme.of(context).colorScheme.primary,
-                    ),
-                  ),
-                  onPressed: () {
-                    logout();
-                  },
-                  child: Text(
-                    'Logout',
-                    style: TextStyle(
-                      color: Theme.of(context).textTheme.bodyLarge!.color,
-                    ),
-                  ),
                 ),
               ],
             ),
           );
         } else {
           return const Center(
-            child: Text('Error'),
+            child: Text('Error loading profile'),
           );
         }
       },
