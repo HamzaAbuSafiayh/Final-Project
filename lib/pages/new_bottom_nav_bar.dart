@@ -1,4 +1,4 @@
-import 'package:finalproject/pages/booking_page.dart';
+import 'package:finalproject/pages/chats_page.dart';
 import 'package:finalproject/pages/homepage.dart';
 import 'package:finalproject/pages/profile_page.dart';
 import 'package:finalproject/view_models/categories_cubit/categories_cubit.dart';
@@ -44,8 +44,8 @@ class _BottomNavBarNewState extends State<BottomNavBarNew> {
             label: 'Home',
           ),
           NavigationDestination(
-            icon: Icon(Icons.work),
-            label: 'Jobs',
+            icon: Icon(Icons.chat),
+            label: 'Chats',
           ),
           NavigationDestination(
             icon: Icon(Icons.person),
@@ -71,7 +71,7 @@ class _BottomNavBarNewState extends State<BottomNavBarNew> {
               cubit.getWorkers();
               return cubit;
             },
-            child: const BookingPage(),
+            child: const ChatsListPage(),
           ),
           BlocProvider(
             create: (context) {

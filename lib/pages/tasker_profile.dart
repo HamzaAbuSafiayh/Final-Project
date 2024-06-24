@@ -1,3 +1,5 @@
+import 'package:finalproject/services/chat_services.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:finalproject/models/user_model.dart';
@@ -10,11 +12,13 @@ class WorkerProfile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final chatservices = ChatServicesImpl();
     final Map arguments = ModalRoute.of(context)!.settings.arguments as Map;
     final profile = arguments['profile'] as UserModel;
     final worker = arguments['worker'] as WorkerModel;
     final selectedDate = DateTime.now();
     const selectedTime = TimeOfDay(hour: 13, minute: 0);
+    final user = FirebaseAuth.instance.currentUser!.uid;
 
     return Scaffold(
       appBar: AppBar(
@@ -42,12 +46,25 @@ class WorkerProfile extends StatelessWidget {
                       ),
                       const SizedBox(width: 16),
                       Text(
-                        profile.username,
+                        profile.username, // UserName from firebase
                         style: const TextStyle(
                           fontSize: 24,
                           fontWeight: FontWeight.bold,
                         ),
                       ),
+                      const SizedBox(width: 45),
+                      IconButton(
+                          color: Colors.green,
+                          onPressed: () {
+                            //do the chat
+                            chatservices.accessChat(user, worker.uid);
+                            Navigator.of(context)
+                                .pushNamed(AppRoutes.chat, arguments: {
+                              'userid': user,
+                              'workerid': worker.uid,
+                            });
+                          },
+                          icon: const Icon(Icons.chat)),
                     ],
                   ),
                   const SizedBox(height: 4),
@@ -64,7 +81,7 @@ class WorkerProfile extends StatelessWidget {
                     children: [
                       Icon(Icons.check_circle_outline),
                       SizedBox(width: 4),
-                      Text('117 Furniture Assembly tasks'),
+                      Text('117 Furniture Assembly tasks') //firebase,
                     ],
                   ),
                   const SizedBox(height: 4),
@@ -72,7 +89,7 @@ class WorkerProfile extends StatelessWidget {
                     children: [
                       Icon(Icons.directions_car),
                       SizedBox(width: 4),
-                      Text('Vehicles: Car, Minivan/SUV'),
+                      Text('Vehicles: Car, Minivan/SUV') //firebase,
                     ],
                   ),
                   const SizedBox(height: 4),
@@ -80,7 +97,8 @@ class WorkerProfile extends StatelessWidget {
                     children: [
                       Icon(Icons.build),
                       SizedBox(width: 4),
-                      Text('Tools: Dolly, Ladder, Power drill, Power washer'),
+                      Text(
+                          'Tools: Dolly, Ladder, Power drill, Power washer') //firebase,
                     ],
                   ),
                   const SizedBox(height: 16),
@@ -95,7 +113,7 @@ class WorkerProfile extends StatelessWidget {
                   ),
                   const SizedBox(height: 8),
                   const Text(
-                    'I have 5 years of furniture assembly. I have my own tools and am willing and able to help you.',
+                    'I have 5 years of furniture assembly. I have my own tools and am willing and able to help you.', //firebase
                   ),
                   const SizedBox(height: 16),
                   const Divider(),

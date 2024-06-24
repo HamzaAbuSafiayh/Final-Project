@@ -4,4 +4,6 @@ class AppRoutes {
   static const String categoryWorkers = '/category-workers';
   static const String workerProfile = '/worker-profile';
   static const String confirmation = '/confirmation';
+  static const String completion = '/completion';
+  static const String chat = '/chat';
 }

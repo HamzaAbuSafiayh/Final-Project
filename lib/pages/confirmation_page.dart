@@ -1,5 +1,7 @@
 import 'package:finalproject/models/user_model.dart';
 import 'package:finalproject/models/worker_model.dart';
+import 'package:finalproject/routes/app_routes.dart';
+// import 'package:finalproject/services/order_services.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
@@ -8,6 +10,7 @@ class ConfirmationPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // final orderservices = OrderServiceImpl();
     final Map arguments = ModalRoute.of(context)!.settings.arguments as Map;
     final selectedTime = arguments['selectedTime'] as TimeOfDay;
     final selectedDate = arguments['selectedDate'] as DateTime;
@@ -52,9 +55,9 @@ class ConfirmationPage extends StatelessWidget {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      const Text(
-                        'Furniture Assembly',
-                        style: TextStyle(
+                      Text(
+                        worker.job,
+                        style: const TextStyle(
                           fontSize: 18,
                           fontWeight: FontWeight.bold,
                         ),
@@ -207,7 +210,11 @@ class ConfirmationPage extends StatelessWidget {
             const Spacer(),
             Center(
               child: ElevatedButton(
-                onPressed: () {},
+                onPressed: () async {
+                  // orderservices.createOrder(worker, selectedDate.toString(),
+                  //     selectedTime.format(context));
+                  Navigator.of(context).pushNamed(AppRoutes.completion);
+                },
                 style: ElevatedButton.styleFrom(
                   padding:
                       const EdgeInsets.symmetric(horizontal: 50, vertical: 15),

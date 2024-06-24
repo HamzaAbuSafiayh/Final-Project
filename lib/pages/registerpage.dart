@@ -34,72 +34,65 @@ class _RegisterPageState extends State<RegisterPage> {
   }
 
   void register() async {
-    showDialog(
-      context: context,
-      builder: (context) =>
-          const Center(child: CircularProgressIndicator.adaptive()),
-      barrierDismissible:
-          false, // Prevents dismissing the dialog by tapping outside
-    );
-
+    // Check if the passwords match
     if (passwordController.text != confirmPasswordController.text) {
-      Navigator.pop(context);
+      Navigator.pop(context); // Dismiss the loading dialog
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
           content: Text('Passwords do not match.'),
           backgroundColor: Colors.red,
         ),
       );
-
       return;
-    } else {
-      try {
-        // Register user with Firebase Auth
-        UserCredential userCredential =
-            await FirebaseAuth.instance.createUserWithEmailAndPassword(
-          email: emailController.text,
-          password: passwordController.text,
+    }
+
+    try {
+      // Register user with Firebase Auth
+      UserCredential userCredential =
+          await FirebaseAuth.instance.createUserWithEmailAndPassword(
+        email: emailController.text,
+        password: passwordController.text,
+      );
+
+      // Use default image URL if no image is selected
+      String imageUrl;
+      if (_image == null) {
+        imageUrl =
+            'https://static-00.iconduck.com/assets.00/profile-default-icon-2048x2045-u3j7s5nj.png';
+      } else {
+        // Upload image to Firebase Storage and get the URL
+        imageUrl = await uploadImageToFirebase(_image);
+      }
+
+      // Save user details to Firestore
+      await FirebaseFirestore.instance
+          .collection('users')
+          .doc(userCredential.user!.uid)
+          .set({
+        'username': usernameController.text,
+        'email': emailController.text,
+        'imageUrl': imageUrl,
+        'role': 'customer', // Set the user role to 'customer'
+      });
+
+      // Dismiss the loading dialog and navigate to the home page
+      if (mounted) {
+        Navigator.pop(context); // Dismiss the loading dialog
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (_) => const HomePage()),
+        ); // Navigate to home page or other suitable page
+      }
+    } catch (e) {
+      // Handle registration error
+      if (mounted) {
+        Navigator.pop(context); // Dismiss the loading dialog
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(e.toString()),
+            backgroundColor: Colors.red,
+          ),
         );
-        if (mounted) {
-          Navigator.pop(context);
-        }
-        // Use default image URL if no image is selected
-        String imageUrl;
-        if (_image == null) {
-          imageUrl =
-              'https://static-00.iconduck.com/assets.00/profile-default-icon-2048x2045-u3j7s5nj.png';
-        } else {
-          // Upload image to Firebase Storage and get the URL
-          imageUrl = await uploadImageToFirebase(_image);
-        }
-
-        // Save user details to Firestore
-        await FirebaseFirestore.instance
-            .collection('users')
-            .doc(userCredential.user!.uid)
-            .set({
-          'username': usernameController.text,
-          'email': emailController.text,
-          'imageUrl': imageUrl,
-          'role': 'customer', // Set the user role to 'customer'
-        });
-
-        if (mounted) {
-          Navigator.pushReplacement(
-            context,
-            MaterialPageRoute(builder: (_) => const HomePage()),
-          ); // Navigate to home page or other suitable page
-        }
-      } catch (e) {
-        if (mounted) {
-          Navigator.pop(context);
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text(e.toString()),
-              backgroundColor: Colors.red,
-            ),
-          );
-        }
       }
     }
   }
