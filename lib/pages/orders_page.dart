@@ -49,7 +49,9 @@ class OrdersPage extends StatelessWidget {
               itemCount: state.orders.length,
               itemBuilder: (context, index) {
                 final order = state.orders[index];
-                return OrderCard(order: order);
+                return OrderCard(order: order, onTap: () {
+                  
+                },);
               },
             ),
           );

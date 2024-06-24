@@ -4,6 +4,7 @@ import 'package:finalproject/pages/chat_page.dart';
 import 'package:finalproject/pages/completion_page.dart';
 import 'package:finalproject/pages/confirmation_page.dart';
 import 'package:finalproject/pages/homepage.dart';
+import 'package:finalproject/pages/order_details_page.dart';
 import 'package:finalproject/pages/tasker_profile.dart';
 import 'package:finalproject/pages/tasks_page.dart';
 import 'package:finalproject/routes/app_routes.dart';
@@ -15,6 +16,11 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 class AppRouter {
   static Route<dynamic> onGenerateRoute(RouteSettings settings) {
     switch (settings.name) {
+      case AppRoutes.orderDetails:
+        return MaterialPageRoute(
+          builder: (_) => const OrderDetailsPage(),
+          settings: settings,
+        );
       case AppRoutes.tasks:
         return MaterialPageRoute(
           builder: (_) => const TasksPage(),

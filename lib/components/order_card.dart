@@ -4,7 +4,8 @@ import 'package:intl/intl.dart'; // Import intl package
 
 class OrderCard extends StatelessWidget {
   final OrderModel order;
-  const OrderCard({super.key, required this.order});
+  final VoidCallback onTap;
+  const OrderCard({super.key, required this.order, required this.onTap});
 
   @override
   Widget build(BuildContext context) {
@@ -63,9 +64,7 @@ class OrderCard extends StatelessWidget {
               style: const TextStyle(color: Colors.white),
             ),
           ),
-          onTap: () {
-            // Implement navigation or additional features when tapping the card
-          },
+          onTap: onTap,
         ),
       ),
     );

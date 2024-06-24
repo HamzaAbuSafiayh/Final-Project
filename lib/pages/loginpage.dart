@@ -20,7 +20,7 @@ class _LoginPageState extends State<LoginPage> {
   void login() async {
     showDialog(
       context: context,
-      barrierDismissible: false, // Prevent dialog from closing on tap outside
+      barrierDismissible: false, 
       builder: (BuildContext context) {
         return const Center(child: (CircularProgressIndicator.adaptive()));
       },
@@ -74,11 +74,11 @@ class _LoginPageState extends State<LoginPage> {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  const Icon(
-                    Icons.person,
-                    size: 80,
+                  Image.asset(
+                    'assets/Main.png',
+                    height: 150,
                   ),
-                  const SizedBox(height: 20),
+                  const SizedBox(height: 5),
                   const Text('H A N D Y P R O', style: TextStyle(fontSize: 20)),
                   const SizedBox(height: 50),
                   MyTextField(
