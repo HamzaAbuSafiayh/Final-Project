@@ -5,5 +5,8 @@ class ApiPaths {
   static String messages(String userId, String workerId) =>
       'chats/${userId}_$workerId/messages';
   static String chatRooms() => 'chats';
-  static String ratingsAndReviews(String workerID) => 'workers/$workerID/customersReviews';
+  static String ratingsAndReviews(String workerID) =>
+      'workers/$workerID/customersReviews';
+  static String sendRatingAndReview(String workerID) =>
+      'workers/$workerID/customersReviews/${DateTime.now()}';
 }

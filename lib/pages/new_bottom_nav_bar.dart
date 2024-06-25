@@ -4,6 +4,7 @@ import 'package:finalproject/pages/profile_page.dart';
 import 'package:finalproject/pages/orders_page.dart';
 import 'package:finalproject/view_models/categories_cubit/categories_cubit.dart';
 import 'package:finalproject/view_models/profile_cubit/profile_cubit.dart';
+import 'package:finalproject/view_models/reviews_cubit/reviews_cubit.dart';
 import 'package:finalproject/view_models/workers_cubit/workers_cubit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -78,7 +79,13 @@ class _BottomNavBarNewState extends State<BottomNavBarNew> {
             },
             child: const ChatsListPage(),
           ),
-          const OrdersPage(),
+          BlocProvider(
+            create: (context) {
+              final cubit = ReviewsCubit();
+              return cubit;
+            },
+            child: const OrdersPage(),
+          ),
           BlocProvider(
             create: (context) {
               final cubit = ProfileCubit();

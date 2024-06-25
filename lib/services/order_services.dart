@@ -2,21 +2,24 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:finalproject/models/order_model.dart';
 import 'package:finalproject/models/worker_model.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:uuid/uuid.dart';
 
 abstract class OrderService {
   Future<void> createOrder(WorkerModel worker, String date, String time);
   Future<List<OrderModel>> getOrders(String userID);
   Future<List<OrderModel>> getWorkerOrders(String workerID);
+  Future<void> updateOrderStatus(String orderID, String status);
   final user = FirebaseAuth.instance.currentUser;
 }
 
 class OrderServiceImpl extends OrderService {
   @override
   Future<void> createOrder(WorkerModel worker, String date, String time) async {
-    String orderId = DateTime.now().toIso8601String();
+    String orderId = const Uuid().v4();
     await FirebaseFirestore.instance.collection('orders').doc(orderId).set({
+      'orderId': orderId,
       'userId': user!.uid,
-      'status': 'pending',
+      'status': 'Pending',
       'workerId': worker.uid,
       'job': worker.job,
       'location': worker.location,
@@ -56,6 +59,13 @@ class OrderServiceImpl extends OrderService {
       return querySnapshot.docs
           .map((doc) => OrderModel.fromMap(doc.data()))
           .toList();
+    });
+  }
+
+  @override
+  Future<void> updateOrderStatus(String orderID, String status) async {
+    await FirebaseFirestore.instance.collection('orders').doc(orderID).update({
+      'status': status,
     });
   }
 }

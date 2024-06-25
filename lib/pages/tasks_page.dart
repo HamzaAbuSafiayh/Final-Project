@@ -1,5 +1,4 @@
 import 'package:finalproject/components/order_card.dart';
-import 'package:finalproject/routes/app_routes.dart';
 import 'package:flutter/material.dart';
 import 'package:finalproject/view_models/orders_cubit/orders_cubit.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -20,8 +19,13 @@ class TasksPage extends StatelessWidget {
       },
       child: BlocBuilder<OrdersCubit, OrdersState>(builder: (context, state) {
         if (state is OrdersInitial || state is OrdersLoading) {
-          return const Center(
-            child: CircularProgressIndicator.adaptive(),
+          return Scaffold(
+            appBar: AppBar(
+              title: const Text('Tasks'),
+            ),
+            body: const Center(
+              child: CircularProgressIndicator.adaptive(),
+            ),
           );
         }
         if (state is OrdersError) {
@@ -50,13 +54,10 @@ class TasksPage extends StatelessWidget {
               itemCount: state.orders.length,
               itemBuilder: (context, index) {
                 final order = state.orders[index];
-                return OrderCard(order: order,onTap: () {
-                  Navigator.of(context).pushNamed(
-                    AppRoutes.orderDetails,
-                    arguments: order,
-                  );
-                  
-                },);
+                return OrderCard(
+                  order: order,
+                  onTap: null,
+                );
               },
             ),
           );

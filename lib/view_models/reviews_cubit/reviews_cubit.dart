@@ -7,6 +7,14 @@ part 'reviews_state.dart';
 class ReviewsCubit extends Cubit<ReviewsState> {
   final ratingsandreviews = RatingReviewsServicesImpl();
   ReviewsCubit() : super(ReviewsInitial());
+  void addReview(String workerID, ReviewModel review) async {
+    try {
+      await ratingsandreviews.addRatingReview(workerID, review);
+      emit(ReviewSent(review));
+    } catch (e) {
+      emit(ReviewsError(e.toString()));
+    }
+  }
 
   void getReviews(String workerId) async {
     emit(ReviewsLoading());

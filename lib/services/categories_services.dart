@@ -4,6 +4,7 @@ import 'package:finalproject/services/firestore_services.dart';
 
 abstract class CategoriesService {
   Future<List<CategoriesModel>> getCategories();
+  Future<CategoriesModel> getCategory(String category);
 }
 
 class CategoriesServicesImpl extends CategoriesService {
@@ -13,4 +14,10 @@ class CategoriesServicesImpl extends CategoriesService {
         path: ApiPaths.categories(),
         builder: (data, documentId) => CategoriesModel.fromMap(data),
       );
+
+  @override
+  Future<CategoriesModel> getCategory(String category) async {
+    final categories = await getCategories();
+    return categories.firstWhere((element) => element.name == category);
+  }
 }

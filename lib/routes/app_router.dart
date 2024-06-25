@@ -9,6 +9,7 @@ import 'package:finalproject/pages/tasker_profile.dart';
 import 'package:finalproject/pages/tasks_page.dart';
 import 'package:finalproject/routes/app_routes.dart';
 import 'package:finalproject/view_models/chat_cubit/chat_cubit.dart';
+import 'package:finalproject/view_models/reviews_cubit/reviews_cubit.dart';
 import 'package:finalproject/view_models/workers_cubit/workers_cubit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -18,7 +19,13 @@ class AppRouter {
     switch (settings.name) {
       case AppRoutes.orderDetails:
         return MaterialPageRoute(
-          builder: (_) => const OrderDetailsPage(),
+          builder: (_) => BlocProvider(
+            create: (context) {
+              final cubit = ReviewsCubit();
+              return cubit;
+            },
+            child: const OrderDetailsPage(),
+          ),
           settings: settings,
         );
       case AppRoutes.tasks:

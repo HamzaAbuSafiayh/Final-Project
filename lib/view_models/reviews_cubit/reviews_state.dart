@@ -12,6 +12,12 @@ final class ReviewsLoaded extends ReviewsState {
   ReviewsLoaded(this.reviews);
 }
 
+final class ReviewSent extends ReviewsState {
+  final ReviewModel review;
+
+  ReviewSent(this.review);
+}
+
 final class ReviewsError extends ReviewsState {
   final String message;
 

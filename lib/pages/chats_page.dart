@@ -14,6 +14,20 @@ class ChatsListPage extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Chats'),
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.search),
+            onPressed: () {
+              // Add search functionality
+            },
+          ),
+          IconButton(
+            icon: const Icon(Icons.more_vert),
+            onPressed: () {
+              // Add more options
+            },
+          ),
+        ],
       ),
       body: FutureBuilder<List<ChatRoomModel>>(
         future: ChatRoomServicesImpl().getChatRooms(userId),
@@ -47,6 +61,12 @@ class ChatsListPage extends StatelessWidget {
             },
           );
         },
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          // Add functionality to start a new chat
+        },
+        child: const Icon(Icons.chat),
       ),
     );
   }

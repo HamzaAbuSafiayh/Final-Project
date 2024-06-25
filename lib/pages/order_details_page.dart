@@ -1,5 +1,10 @@
 import 'package:finalproject/models/order_model.dart';
+import 'package:finalproject/models/review_model.dart';
+import 'package:finalproject/services/order_services.dart';
+import 'package:finalproject/view_models/reviews_cubit/reviews_cubit.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 
 class OrderDetailsPage extends StatefulWidget {
@@ -10,17 +15,30 @@ class OrderDetailsPage extends StatefulWidget {
 }
 
 class _OrderDetailsPageState extends State<OrderDetailsPage> {
+  late ReviewModel review;
   String dropdownValue = 'Pending';
   final TextEditingController reviewController = TextEditingController();
+  final user = FirebaseAuth.instance.currentUser;
+  late String workerID;
+  late String orderID;
+  final orderServices = OrderServiceImpl();
   double rating = 0.0;
+  bool isDropdownChanged = false;
 
   @override
   Widget build(BuildContext context) {
     final order = ModalRoute.of(context)!.settings.arguments as OrderModel;
     final theme = Theme.of(context);
-
+    workerID = order.workerId;
+    orderID = order.orderId;
     return Scaffold(
       appBar: AppBar(
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back),
+          onPressed: () {
+            Navigator.pop(context, 'updated');
+          },
+        ),
         title: Text(order.job),
       ),
       body: SingleChildScrollView(
@@ -33,10 +51,6 @@ class _OrderDetailsPageState extends State<OrderDetailsPage> {
               style: theme.textTheme.titleLarge,
             ),
             const SizedBox(height: 10),
-            Text(
-              'Worker ID: ${order.workerId}',
-              style: theme.textTheme.titleMedium,
-            ),
             const SizedBox(height: 20),
             _buildDropdownButton(theme),
             const SizedBox(height: 20),
@@ -72,11 +86,38 @@ class _OrderDetailsPageState extends State<OrderDetailsPage> {
             const SizedBox(height: 20),
             Center(
               child: ElevatedButton(
-                onPressed: () {
-                  // Handle the save operation with new status, review, and rating
-                  saveOrderDetails();
-                },
-                child: const Text('Save Changes'),
+                onPressed: isDropdownChanged
+                    ? () {
+                        // Handle the save operation with new status, review, and rating
+                        saveOrderDetails();
+                        Navigator.pop(
+                            context, 'updated'); // Return result when popping
+                      }
+                    : null,
+                style: ButtonStyle(
+                  backgroundColor: MaterialStateProperty.resolveWith<Color>(
+                    (Set<MaterialState> states) {
+                      if (states.contains(MaterialState.disabled)) {
+                        return Colors.grey; // Disabled color
+                      }
+                      return Theme.of(context).primaryColor; // Enabled color
+                    },
+                  ),
+                  foregroundColor: MaterialStateProperty.resolveWith<Color>(
+                    (Set<MaterialState> states) {
+                      if (states.contains(MaterialState.disabled)) {
+                        return Colors.white; // Text color when disabled
+                      }
+                      return Colors.white; // Text color when enabled
+                    },
+                  ),
+                ),
+                child: Text(
+                  'Save Changes',
+                  style: TextStyle(
+                    color: Theme.of(context).colorScheme.onSurface,
+                  ),
+                ),
               ),
             ),
           ],
@@ -103,6 +144,7 @@ class _OrderDetailsPageState extends State<OrderDetailsPage> {
           onChanged: (String? newValue) {
             setState(() {
               dropdownValue = newValue!;
+              isDropdownChanged = dropdownValue == 'Completed';
             });
           },
           items: const [
@@ -115,7 +157,15 @@ class _OrderDetailsPageState extends State<OrderDetailsPage> {
   }
 
   void saveOrderDetails() {
-    // Implement your save logic here, e.g., updating the order in the database
+    // Save the order details
+    review = ReviewModel(
+      timestamp: DateTime.now().toIso8601String(),
+      userID: user!.uid,
+      review: reviewController.text,
+      rating: rating,
+    );
+    BlocProvider.of<ReviewsCubit>(context).addReview(workerID, review);
+    orderServices.updateOrderStatus(orderID, dropdownValue);
   }
 
   @override

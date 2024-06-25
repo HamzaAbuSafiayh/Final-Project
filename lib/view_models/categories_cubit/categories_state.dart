@@ -11,6 +11,11 @@ final class CategoriesLoaded extends CategoriesState {
   CategoriesLoaded(this.categories);
 }
 
+final class CategoryLoaded extends CategoriesState {
+  final CategoriesModel category;
+  CategoryLoaded(this.category);
+}
+
 final class CategoriesError extends CategoriesState {
   final String message;
   CategoriesError(this.message);
