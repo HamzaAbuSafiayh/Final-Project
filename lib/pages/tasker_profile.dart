@@ -1,10 +1,13 @@
 import 'package:finalproject/services/chat_services.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:finalproject/models/user_model.dart';
 import 'package:finalproject/models/worker_model.dart';
 import 'package:finalproject/routes/app_routes.dart';
+import 'package:flutter/widgets.dart';
+import 'package:full_screen_image/full_screen_image.dart';
 import 'package:intl/intl.dart';
 
 class WorkerProfile extends StatelessWidget {
@@ -32,7 +35,7 @@ class WorkerProfile extends StatelessWidget {
       ),
       body: Column(
         children: [
-          Expanded(
+        Expanded(
             child: SingleChildScrollView(
               padding: const EdgeInsets.all(16.0),
               child: Column(
@@ -54,7 +57,7 @@ class WorkerProfile extends StatelessWidget {
                       ),
                       const SizedBox(width: 45),
                       IconButton(
-                          color: Colors.green,
+                          color: Colors.grey,
                           onPressed: () {
                             //do the chat
                             chatservices.accessChat(user, worker.uid);
@@ -81,7 +84,7 @@ class WorkerProfile extends StatelessWidget {
                     children: [
                       Icon(Icons.check_circle_outline),
                       SizedBox(width: 4),
-                      Text('117 Furniture Assembly tasks') //firebase,
+                      Text('117 Furniture Assembly tasks',style: TextStyle(color: Color.fromRGBO(36, 150, 137, 1), fontWeight: FontWeight.bold)), //firebase,
                     ],
                   ),
                   const SizedBox(height: 4),
@@ -101,9 +104,11 @@ class WorkerProfile extends StatelessWidget {
                           'Tools: Dolly, Ladder, Power drill, Power washer') //firebase,
                     ],
                   ),
-                  const SizedBox(height: 16),
-                  const Divider(),
-                  const SizedBox(height: 16),
+                  const SizedBox(height: 8),
+                  const Divider(
+                    thickness: 0.3,
+                  ),
+                  const SizedBox(height: 8),
                   const Text(
                     'Skills & experience',
                     style: TextStyle(
@@ -115,9 +120,11 @@ class WorkerProfile extends StatelessWidget {
                   const Text(
                     'I have 5 years of furniture assembly. I have my own tools and am willing and able to help you.', //firebase
                   ),
-                  const SizedBox(height: 16),
-                  const Divider(),
-                  const SizedBox(height: 16),
+                  const SizedBox(height: 8),
+                  const Divider(
+                    thickness: 0.3,
+                  ),
+                  const SizedBox(height: 8),
                   const Text(
                     'Photos',
                     style: TextStyle(
@@ -150,18 +157,31 @@ class WorkerProfile extends StatelessWidget {
                           return Container(
                             width: MediaQuery.of(context).size.width,
                             margin: const EdgeInsets.symmetric(horizontal: 5.0),
-                            child: Image.network(
-                              photoUrl,
-                              fit: BoxFit.cover,
+                            child: InkWell(
+                              onTap: () => showDialog(
+                                context: context,
+                                builder: (BuildContext context) {
+                                  return Image.network(
+                                    photoUrl,
+                                    fit: BoxFit.contain,
+                                  );
+                                },
+                              ),
+                              child: Image.network(
+                                      photoUrl,
+                                      fit: BoxFit.cover,
+                                    ),
                             ),
                           );
                         },
                       );
                     }).toList(),
                   ),
-                  const SizedBox(height: 16),
-                  const Divider(),
-                  const SizedBox(height: 16),
+                  const SizedBox(height: 8),
+                  const Divider(
+                    thickness: 0.3,
+                  ),
+                  const SizedBox(height: 8),
                   const Text(
                     'Ratings & reviews',
                     style: TextStyle(
@@ -187,9 +207,11 @@ class WorkerProfile extends StatelessWidget {
                     ],
                   ),
                   const SizedBox(height: 8),
-                  _buildRatingBar('5 star', 99),
+                  _buildRatingBar('5 star', 78),
                   _buildRatingBar('4 star', 0),
                   _buildRatingBar('3 star', 1),
+                  _buildRatingBar('2 star', 15),
+                  _buildRatingBar('1 star', 6),
                   const SizedBox(height: 16),
                 ],
               ),
@@ -199,16 +221,18 @@ class WorkerProfile extends StatelessWidget {
             padding: const EdgeInsets.all(16.0),
             child: Column(
               children: [
-                const Divider(),
+                // const Divider(
+                //   thickness: 0.3,
+                // ),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Text(
                       '\$${worker.cost}/hr',
-                      style: const TextStyle(
+                      style: TextStyle(
                         fontSize: 24,
                         fontWeight: FontWeight.bold,
-                        color: Colors.green,
+                        color: Theme.of(context).textTheme.bodyLarge!.color,
                       ),
                     ),
                     ElevatedButton(
@@ -217,6 +241,7 @@ class WorkerProfile extends StatelessWidget {
                             profile, worker);
                       },
                       style: ElevatedButton.styleFrom(
+                        backgroundColor: const Color.fromRGBO(36, 150, 137, 1),
                         padding: const EdgeInsets.symmetric(
                             horizontal: 50, vertical: 15),
                       ),
@@ -241,18 +266,19 @@ class WorkerProfile extends StatelessWidget {
   Widget _buildRatingBar(String label, int percentage) {
     return Row(
       children: [
-        Expanded(
-          flex: 1,
-          child: Text(label),
-        ),
-        Expanded(
-          flex: 5,
+        SizedBox(
+          width: 45,
+          child: Text(label, style: const TextStyle(color: Color.fromRGBO(36, 150, 137, 1), fontWeight: FontWeight.bold),
+        ),),
+        SizedBox(
+          width: 330,
           child: LinearProgressIndicator(
-            value: percentage / 100.0,
-            backgroundColor: Colors.grey[300],
-            color: Colors.green,
+              borderRadius: BorderRadius.circular(20),
+              value: percentage / 100.0,
+              backgroundColor: Colors.grey[300],
+              color: const Color.fromRGBO(36, 150, 137, 1),
+            ),
           ),
-        ),
         const SizedBox(width: 8),
         Text('$percentage%'),
       ],

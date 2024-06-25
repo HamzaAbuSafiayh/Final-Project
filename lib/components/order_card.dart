@@ -21,7 +21,7 @@ class OrderCard extends StatelessWidget {
       color: colorScheme.surface,
       child: Container(
         decoration: BoxDecoration(
-          color: colorScheme.background,
+          color: colorScheme.surface,
           borderRadius: BorderRadius.circular(5),
         ),
         child: ListTile(

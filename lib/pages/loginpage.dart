@@ -75,7 +75,7 @@ class _LoginPageState extends State<LoginPage> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Image.asset(
-                    'assets/Main.png',
+                    'assets/main.png',
                     height: 150,
                   ),
                   const SizedBox(height: 5),
