@@ -20,7 +20,7 @@ class _LoginPageState extends State<LoginPage> {
   void login() async {
     showDialog(
       context: context,
-      barrierDismissible: false, 
+      barrierDismissible: false,
       builder: (BuildContext context) {
         return const Center(child: (CircularProgressIndicator.adaptive()));
       },

@@ -1,13 +1,15 @@
+import 'package:finalproject/models/review_model.dart';
 import 'package:finalproject/services/chat_services.dart';
+import 'package:finalproject/view_models/profile_cubit/profile_cubit.dart';
+import 'package:finalproject/view_models/reviews_cubit/reviews_cubit.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:finalproject/models/user_model.dart';
 import 'package:finalproject/models/worker_model.dart';
 import 'package:finalproject/routes/app_routes.dart';
-import 'package:flutter/widgets.dart';
-import 'package:full_screen_image/full_screen_image.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:intl/intl.dart';
 
 class WorkerProfile extends StatelessWidget {
@@ -35,7 +37,7 @@ class WorkerProfile extends StatelessWidget {
       ),
       body: Column(
         children: [
-        Expanded(
+          Expanded(
             child: SingleChildScrollView(
               padding: const EdgeInsets.all(16.0),
               child: Column(
@@ -48,35 +50,40 @@ class WorkerProfile extends StatelessWidget {
                         backgroundImage: NetworkImage(profile.imageUrl),
                       ),
                       const SizedBox(width: 16),
-                      Text(
-                        profile.username, // UserName from firebase
-                        style: const TextStyle(
-                          fontSize: 24,
-                          fontWeight: FontWeight.bold,
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              profile.username,
+                              style: const TextStyle(
+                                fontSize: 24,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                            Row(
+                              children: [
+                                const Icon(Icons.star, color: Colors.amber),
+                                const SizedBox(width: 4),
+                                Text(
+                                    '${worker.sumofratings} (${worker.reviews} ratings)'),
+                              ],
+                            ),
+                          ],
                         ),
                       ),
-                      const SizedBox(width: 45),
                       IconButton(
-                          color: Colors.grey,
-                          onPressed: () {
-                            //do the chat
-                            chatservices.accessChat(user, worker.uid);
-                            Navigator.of(context)
-                                .pushNamed(AppRoutes.chat, arguments: {
-                              'userid': user,
-                              'workerid': worker.uid,
-                            });
-                          },
-                          icon: const Icon(Icons.chat)),
-                    ],
-                  ),
-                  const SizedBox(height: 4),
-                  Row(
-                    children: [
-                      const Icon(Icons.star, color: Colors.amber),
-                      const SizedBox(width: 4),
-                      Text(
-                          '${worker.sumofratings} (${worker.reviews} ratings)'),
+                        color: Colors.grey,
+                        onPressed: () {
+                          chatservices.accessChat(user, worker.uid);
+                          Navigator.of(context)
+                              .pushNamed(AppRoutes.chat, arguments: {
+                            'userid': user,
+                            'workerid': worker.uid,
+                          });
+                        },
+                        icon: const Icon(Icons.chat),
+                      ),
                     ],
                   ),
                   const SizedBox(height: 4),
@@ -84,7 +91,13 @@ class WorkerProfile extends StatelessWidget {
                     children: [
                       Icon(Icons.check_circle_outline),
                       SizedBox(width: 4),
-                      Text('117 Furniture Assembly tasks',style: TextStyle(color: Color.fromRGBO(36, 150, 137, 1), fontWeight: FontWeight.bold)), //firebase,
+                      Text(
+                        '117 Furniture Assembly tasks',
+                        style: TextStyle(
+                          color: Color.fromRGBO(36, 150, 137, 1),
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
                     ],
                   ),
                   const SizedBox(height: 4),
@@ -92,7 +105,7 @@ class WorkerProfile extends StatelessWidget {
                     children: [
                       Icon(Icons.directions_car),
                       SizedBox(width: 4),
-                      Text('Vehicles: Car, Minivan/SUV') //firebase,
+                      Text('Vehicles: Car, Minivan/SUV'),
                     ],
                   ),
                   const SizedBox(height: 4),
@@ -100,14 +113,11 @@ class WorkerProfile extends StatelessWidget {
                     children: [
                       Icon(Icons.build),
                       SizedBox(width: 4),
-                      Text(
-                          'Tools: Dolly, Ladder, Power drill, Power washer') //firebase,
+                      Text('Tools: Dolly, Ladder, Power drill, Power washer'),
                     ],
                   ),
                   const SizedBox(height: 8),
-                  const Divider(
-                    thickness: 0.3,
-                  ),
+                  const Divider(thickness: 0.3),
                   const SizedBox(height: 8),
                   const Text(
                     'Skills & experience',
@@ -118,12 +128,10 @@ class WorkerProfile extends StatelessWidget {
                   ),
                   const SizedBox(height: 8),
                   const Text(
-                    'I have 5 years of furniture assembly. I have my own tools and am willing and able to help you.', //firebase
+                    'I have 5 years of furniture assembly. I have my own tools and am willing and able to help you.',
                   ),
                   const SizedBox(height: 8),
-                  const Divider(
-                    thickness: 0.3,
-                  ),
+                  const Divider(thickness: 0.3),
                   const SizedBox(height: 8),
                   const Text(
                     'Photos',
@@ -139,11 +147,9 @@ class WorkerProfile extends StatelessWidget {
                       aspectRatio: 16 / 9,
                       viewportFraction: 0.8,
                       initialPage: 0,
-                      enableInfiniteScroll: worker.photos.length >
-                          1, // Disable infinite scroll if there's only one photo
+                      enableInfiniteScroll: worker.photos.length > 1,
                       reverse: false,
-                      autoPlay: worker.photos.length >
-                          1, // Disable auto play if there's only one photo
+                      autoPlay: worker.photos.length > 1,
                       autoPlayInterval: const Duration(seconds: 3),
                       autoPlayAnimationDuration:
                           const Duration(milliseconds: 800),
@@ -168,9 +174,9 @@ class WorkerProfile extends StatelessWidget {
                                 },
                               ),
                               child: Image.network(
-                                      photoUrl,
-                                      fit: BoxFit.cover,
-                                    ),
+                                photoUrl,
+                                fit: BoxFit.cover,
+                              ),
                             ),
                           );
                         },
@@ -178,9 +184,7 @@ class WorkerProfile extends StatelessWidget {
                     }).toList(),
                   ),
                   const SizedBox(height: 8),
-                  const Divider(
-                    thickness: 0.3,
-                  ),
+                  const Divider(thickness: 0.3),
                   const SizedBox(height: 8),
                   const Text(
                     'Ratings & reviews',
@@ -190,29 +194,59 @@ class WorkerProfile extends StatelessWidget {
                     ),
                   ),
                   const SizedBox(height: 8),
-                  Row(
-                    children: [
-                      Expanded(
-                        child: Row(
-                          children: [
-                            const Icon(Icons.star, color: Colors.amber),
-                            const SizedBox(width: 4),
-                            Text(
-                              '${worker.sumofratings} (${worker.reviews} ratings)',
-                              style: const TextStyle(fontSize: 16),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ],
-                  ),
-                  const SizedBox(height: 8),
                   _buildRatingBar('5 star', 78),
                   _buildRatingBar('4 star', 0),
                   _buildRatingBar('3 star', 1),
                   _buildRatingBar('2 star', 15),
                   _buildRatingBar('1 star', 6),
                   const SizedBox(height: 16),
+                  const Divider(thickness: 0.3),
+                  BlocProvider(
+                    create: (context) {
+                      final cubit = ReviewsCubit();
+                      cubit.getReviews(worker.uid);
+                      return cubit;
+                    },
+                    child: BlocBuilder<ReviewsCubit, ReviewsState>(
+                      builder: (context, state) {
+                        if (state is ReviewsLoading) {
+                          return const Center(
+                              child: CircularProgressIndicator());
+                        }
+                        if (state is ReviewsLoaded) {
+                          return ListView.builder(
+                            shrinkWrap: true,
+                            physics: const NeverScrollableScrollPhysics(),
+                            itemCount: state.reviews.length,
+                            itemBuilder: (context, index) {
+                              final review = state.reviews[index];
+                              return BlocProvider(
+                                create: (context) {
+                                  final cubit = ProfileCubit();
+                                  cubit.getProfileWorker(review.userID);
+                                  return cubit;
+                                },
+                                child: BlocBuilder<ProfileCubit, ProfileState>(
+                                  builder: (context, state) {
+                                    if (state is ProfileLoading) {
+                                      return const Center(
+                                          child: CircularProgressIndicator());
+                                    }
+                                    if (state is ProfileLoaded) {
+                                      return _buildReviewCard(
+                                          context, review, state.profile);
+                                    }
+                                    return Container();
+                                  },
+                                ),
+                              );
+                            },
+                          );
+                        }
+                        return Container();
+                      },
+                    ),
+                  ),
                 ],
               ),
             ),
@@ -221,9 +255,6 @@ class WorkerProfile extends StatelessWidget {
             padding: const EdgeInsets.all(16.0),
             child: Column(
               children: [
-                // const Divider(
-                //   thickness: 0.3,
-                // ),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
@@ -268,20 +299,87 @@ class WorkerProfile extends StatelessWidget {
       children: [
         SizedBox(
           width: 45,
-          child: Text(label, style: const TextStyle(color: Color.fromRGBO(36, 150, 137, 1), fontWeight: FontWeight.bold),
-        ),),
+          child: Text(
+            label,
+            style: const TextStyle(
+                color: Color.fromRGBO(36, 150, 137, 1),
+                fontWeight: FontWeight.bold),
+          ),
+        ),
         SizedBox(
           width: 330,
           child: LinearProgressIndicator(
-              borderRadius: BorderRadius.circular(20),
-              value: percentage / 100.0,
-              backgroundColor: Colors.grey[300],
-              color: const Color.fromRGBO(36, 150, 137, 1),
-            ),
+            borderRadius: BorderRadius.circular(20),
+            value: percentage / 100.0,
+            backgroundColor: Colors.grey[300],
+            color: const Color.fromRGBO(36, 150, 137, 1),
           ),
+        ),
         const SizedBox(width: 8),
         Text('$percentage%'),
       ],
+    );
+  }
+
+  Widget _buildReviewCard(
+      BuildContext context, ReviewModel review, UserModel profile) {
+    final theme = Theme.of(context);
+    return Card(
+      elevation: 3,
+      margin: const EdgeInsets.symmetric(vertical: 8),
+      child: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              children: [
+                CircleAvatar(
+                  radius: 20,
+                  backgroundImage: NetworkImage(profile.imageUrl),
+                ),
+                const SizedBox(width: 8),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      profile.username,
+                      style: theme.textTheme.titleMedium?.copyWith(
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    Text(
+                      DateFormat('yyyy-MM-dd HH:mm')
+                          .format(DateTime.parse(review.timestamp)),
+                      style: theme.textTheme.bodyMedium?.copyWith(
+                        color: theme.colorScheme.onSurface.withOpacity(0.6),
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+            const SizedBox(height: 12),
+            RatingBarIndicator(
+              rating: review.rating,
+              itemBuilder: (context, _) => const Icon(
+                Icons.star,
+                color: Colors.amber,
+              ),
+              itemCount: 5,
+              itemSize: 20.0,
+              direction: Axis.horizontal,
+            ),
+            const SizedBox(height: 8),
+            Text(
+              review.review,
+              style: theme.textTheme.bodyMedium,
+            ),
+            const SizedBox(height: 12),
+            const Divider(),
+          ],
+        ),
+      ),
     );
   }
 

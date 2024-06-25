@@ -1,5 +1,6 @@
 import 'package:finalproject/models/order_model.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 
 class OrderDetailsPage extends StatefulWidget {
   const OrderDetailsPage({super.key});
@@ -9,22 +10,15 @@ class OrderDetailsPage extends StatefulWidget {
 }
 
 class _OrderDetailsPageState extends State<OrderDetailsPage> {
-  late OrderModel order; // The order model
-  late String currentStatus; // Ensure it's initialized properly
+  String dropdownValue = 'Pending';
   final TextEditingController reviewController = TextEditingController();
   double rating = 0.0;
 
   @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-    order = ModalRoute.of(context)!.settings.arguments as OrderModel;
-    currentStatus = (order.status == 'Pending' || order.status == 'Completed')
-        ? order.status
-        : 'Pending'; // Initialize with the current status or default to 'Pending'
-  }
-
-  @override
   Widget build(BuildContext context) {
+    final order = ModalRoute.of(context)!.settings.arguments as OrderModel;
+    final theme = Theme.of(context);
+
     return Scaffold(
       appBar: AppBar(
         title: Text(order.job),
@@ -36,28 +30,15 @@ class _OrderDetailsPageState extends State<OrderDetailsPage> {
           children: [
             Text(
               'Job: ${order.job}',
-              style: Theme.of(context).textTheme.titleLarge,
+              style: theme.textTheme.titleLarge,
             ),
+            const SizedBox(height: 10),
             Text(
               'Worker ID: ${order.workerId}',
-              style: Theme.of(context).textTheme.bodyLarge,
+              style: theme.textTheme.titleMedium,
             ),
             const SizedBox(height: 20),
-            DropdownButton<String>(
-              value: currentStatus,
-              items: <String>['Pending', 'Completed']
-                  .map<DropdownMenuItem<String>>((String value) {
-                return DropdownMenuItem<String>(
-                  value: value,
-                  child: Text(value),
-                );
-              }).toList(),
-              onChanged: (String? newValue) {
-                setState(() {
-                  currentStatus = newValue!;
-                });
-              },
-            ),
+            _buildDropdownButton(theme),
             const SizedBox(height: 20),
             TextField(
               controller: reviewController,
@@ -70,15 +51,19 @@ class _OrderDetailsPageState extends State<OrderDetailsPage> {
             const SizedBox(height: 20),
             Text(
               'Rate the job:',
-              style: Theme.of(context).textTheme.titleMedium,
+              style: theme.textTheme.titleMedium,
             ),
-            Slider(
-              min: 0.0,
-              max: 5.0,
-              divisions: 10,
-              label: '${rating.toStringAsFixed(1)} Stars',
-              value: rating,
-              onChanged: (newRating) {
+            RatingBar.builder(
+              initialRating: rating,
+              minRating: 1,
+              direction: Axis.horizontal,
+              allowHalfRating: false,
+              itemCount: 5,
+              itemBuilder: (context, _) => const Icon(
+                Icons.star,
+                color: Colors.amber,
+              ),
+              onRatingUpdate: (newRating) {
                 setState(() {
                   rating = newRating;
                 });
@@ -89,7 +74,6 @@ class _OrderDetailsPageState extends State<OrderDetailsPage> {
               child: ElevatedButton(
                 onPressed: () {
                   // Handle the save operation with new status, review, and rating
-                  // For example, you might update the order in a database
                   saveOrderDetails();
                 },
                 child: const Text('Save Changes'),
@@ -101,7 +85,38 @@ class _OrderDetailsPageState extends State<OrderDetailsPage> {
     );
   }
 
-  void saveOrderDetails() {}
+  Widget _buildDropdownButton(ThemeData theme) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
+      decoration: BoxDecoration(
+        color: theme.colorScheme.background,
+        borderRadius: BorderRadius.circular(8),
+        border: Border.all(color: theme.colorScheme.onSurface),
+      ),
+      child: DropdownButtonHideUnderline(
+        child: DropdownButton<String>(
+          value: dropdownValue,
+          icon: Icon(Icons.arrow_downward, color: theme.colorScheme.secondary),
+          iconSize: 24,
+          elevation: 16,
+          style: TextStyle(color: theme.colorScheme.onSurface),
+          onChanged: (String? newValue) {
+            setState(() {
+              dropdownValue = newValue!;
+            });
+          },
+          items: const [
+            DropdownMenuItem(value: 'Pending', child: Text('Pending')),
+            DropdownMenuItem(value: 'Completed', child: Text('Completed')),
+          ],
+        ),
+      ),
+    );
+  }
+
+  void saveOrderDetails() {
+    // Implement your save logic here, e.g., updating the order in the database
+  }
 
   @override
   void dispose() {
