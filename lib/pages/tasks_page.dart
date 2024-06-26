@@ -1,4 +1,5 @@
 import 'package:finalproject/components/order_card.dart';
+import 'package:finalproject/routes/app_routes.dart';
 import 'package:flutter/material.dart';
 import 'package:finalproject/view_models/orders_cubit/orders_cubit.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -14,7 +15,7 @@ class TasksPage extends StatelessWidget {
     return BlocProvider(
       create: (context) {
         final cubit = OrdersCubit();
-        cubit.getOrdersworker(user!.uid);
+        cubit.getOrdersWorker(user!.uid);
         return cubit;
       },
       child: BlocBuilder<OrdersCubit, OrdersState>(builder: (context, state) {
@@ -56,7 +57,12 @@ class TasksPage extends StatelessWidget {
                 final order = state.orders[index];
                 return OrderCard(
                   order: order,
-                  onTap: null,
+                  onTap: () {
+                    Navigator.of(context).pushNamed(
+                      AppRoutes.orderDetails,
+                      arguments: order,
+                    );
+                  },
                 );
               },
             ),

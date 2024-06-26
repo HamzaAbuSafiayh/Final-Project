@@ -211,9 +211,11 @@ class ConfirmationPage extends StatelessWidget {
             Center(
               child: ElevatedButton(
                 onPressed: () async {
-                  orderservices.createOrder(worker, selectedDate.toString(),
-                      selectedTime.format(context));
-                  Navigator.of(context).pushNamed(AppRoutes.completion);
+                  String orderId = await orderservices.createOrder(worker,
+                      selectedDate.toString(), selectedTime.format(context));
+                  // ignore: use_build_context_synchronously
+                  Navigator.of(context)
+                      .pushNamed(AppRoutes.completion, arguments: orderId);
                 },
                 style: ElevatedButton.styleFrom(
                   padding:

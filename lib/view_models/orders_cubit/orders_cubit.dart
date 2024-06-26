@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:finalproject/services/order_services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:finalproject/models/order_model.dart';
@@ -7,24 +9,37 @@ part 'orders_state.dart';
 class OrdersCubit extends Cubit<OrdersState> {
   OrdersCubit() : super(OrdersInitial());
   final orderservices = OrderServiceImpl();
+  StreamSubscription<List<OrderModel>>? _ordersSubscription;
 
-  void getOrdersworker(String workerID) async {
+  void getOrdersWorker(String workerID) {
     emit(OrdersLoading());
-    try {
-      final orders = await orderservices.getWorkerOrders(workerID);
-      emit(OrdersLoaded(orders));
-    } catch (e) {
-      emit(OrdersError(e.toString()));
-    }
+    _ordersSubscription?.cancel();
+    _ordersSubscription = orderservices.getWorkerOrders(workerID).listen(
+      (orders) {
+        emit(OrdersLoaded(orders));
+      },
+      onError: (e) {
+        emit(OrdersError(e.toString()));
+      },
+    );
   }
 
-  void getOrders(String userID) async {
+  void getOrders(String userID) {
     emit(OrdersLoading());
-    try {
-      final orders = await orderservices.getOrders(userID);
-      emit(OrdersLoaded(orders));
-    } catch (e) {
-      emit(OrdersError(e.toString()));
-    }
+    _ordersSubscription?.cancel();
+    _ordersSubscription = orderservices.getOrders(userID).listen(
+      (orders) {
+        emit(OrdersLoaded(orders));
+      },
+      onError: (e) {
+        emit(OrdersError(e.toString()));
+      },
+    );
+  }
+
+  @override
+  Future<void> close() {
+    _ordersSubscription?.cancel();
+    return super.close();
   }
 }

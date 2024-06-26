@@ -1,10 +1,11 @@
+import 'package:finalproject/routes/app_routes.dart';
 import 'package:flutter/material.dart';
 
 class OrderCompletionPage extends StatelessWidget {
   const OrderCompletionPage({super.key});
-
   @override
   Widget build(BuildContext context) {
+    final String orderId = ModalRoute.of(context)!.settings.arguments as String;
     return Scaffold(
       body: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -39,9 +40,9 @@ class OrderCompletionPage extends StatelessWidget {
               textAlign: TextAlign.center,
             ),
             const SizedBox(height: 16),
-            const Text(
-              'We received your order and we will contact you through a phone call in the next 24H. Your order number is #5173343.',
-              style: TextStyle(
+            Text(
+              'We received your order and we will contact you through a phone call in the next 24H. Your order number is #${orderId.split('-').first} .',
+              style: const TextStyle(
                 fontSize: 16,
               ),
               textAlign: TextAlign.center,
@@ -59,7 +60,11 @@ class OrderCompletionPage extends StatelessWidget {
               width: double.infinity,
               child: ElevatedButton(
                 onPressed: () {
-                  // Navigate to order details screen
+                  Navigator.of(context).pop();
+                  Navigator.of(context).pop();
+                  Navigator.of(context).pop();
+                  Navigator.of(context).pop();
+                  Navigator.of(context).pushNamed(AppRoutes.ordersPage);
                 },
                 style: ElevatedButton.styleFrom(
                   padding: const EdgeInsets.symmetric(vertical: 16),

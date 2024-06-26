@@ -6,16 +6,18 @@ import 'package:uuid/uuid.dart';
 
 abstract class OrderService {
   Future<void> createOrder(WorkerModel worker, String date, String time);
-  Future<List<OrderModel>> getOrders(String userID);
-  Future<List<OrderModel>> getWorkerOrders(String workerID);
+  Stream<List<OrderModel>> getOrders(String userID);
+  Stream<List<OrderModel>> getWorkerOrders(String workerID);
   Future<void> updateOrderStatus(String orderID, String status);
   final user = FirebaseAuth.instance.currentUser;
 }
 
 class OrderServiceImpl extends OrderService {
   @override
-  Future<void> createOrder(WorkerModel worker, String date, String time) async {
+  Future<String> createOrder(
+      WorkerModel worker, String date, String time) async {
     String orderId = const Uuid().v4();
+
     await FirebaseFirestore.instance.collection('orders').doc(orderId).set({
       'orderId': orderId,
       'userId': user!.uid,
@@ -23,7 +25,7 @@ class OrderServiceImpl extends OrderService {
       'workerId': worker.uid,
       'job': worker.job,
       'location': worker.location,
-      'cost': worker.cost,
+      'cost': worker.cost + 10,
       'date': date,
       'time': time,
     });
@@ -34,15 +36,16 @@ class OrderServiceImpl extends OrderService {
     await FirebaseFirestore.instance.collection('workers').doc(worker.uid).set({
       'orders': FieldValue.arrayUnion([orderId]),
     }, SetOptions(merge: true));
+    return orderId;
   }
 
   @override
-  Future<List<OrderModel>> getOrders(String userID) async {
-    return await FirebaseFirestore.instance
+  Stream<List<OrderModel>> getOrders(String userID) {
+    return FirebaseFirestore.instance
         .collection('orders')
         .where('userId', isEqualTo: userID)
-        .get()
-        .then((querySnapshot) {
+        .snapshots()
+        .map((querySnapshot) {
       return querySnapshot.docs
           .map((doc) => OrderModel.fromMap(doc.data()))
           .toList();
@@ -50,12 +53,12 @@ class OrderServiceImpl extends OrderService {
   }
 
   @override
-  Future<List<OrderModel>> getWorkerOrders(String workerID) async {
-    return await FirebaseFirestore.instance
+  Stream<List<OrderModel>> getWorkerOrders(String workerID) {
+    return FirebaseFirestore.instance
         .collection('orders')
         .where('workerId', isEqualTo: workerID)
-        .get()
-        .then((querySnapshot) {
+        .snapshots()
+        .map((querySnapshot) {
       return querySnapshot.docs
           .map((doc) => OrderModel.fromMap(doc.data()))
           .toList();

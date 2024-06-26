@@ -375,8 +375,6 @@ class WorkerProfile extends StatelessWidget {
               review.review,
               style: theme.textTheme.bodyMedium,
             ),
-            const SizedBox(height: 12),
-            const Divider(),
           ],
         ),
       ),

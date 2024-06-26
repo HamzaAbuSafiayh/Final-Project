@@ -8,4 +8,5 @@ class AppRoutes {
   static const String chat = '/chat';
   static const String tasks = '/tasks';
   static const String orderDetails = '/order-details';
+  static const String ordersPage = '/orders';
 }

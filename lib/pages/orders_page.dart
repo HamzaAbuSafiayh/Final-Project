@@ -56,16 +56,10 @@ class OrdersPage extends StatelessWidget {
                     onTap: order.status == 'Completed'
                         ? null
                         : () async {
-                            // Navigate to the details page and wait for the result
-                            final result =
-                                await Navigator.of(context).pushNamed(
+                            Navigator.of(context).pushNamed(
                               AppRoutes.orderDetails,
                               arguments: order,
                             );
-                            // Check if result is 'updated' and trigger a state update
-                            if (result == 'updated') {
-                              OrdersCubit().getOrders(user!.uid);
-                            }
                           },
                   );
                 },
