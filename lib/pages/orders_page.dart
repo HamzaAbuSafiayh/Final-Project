@@ -35,7 +35,7 @@ class OrdersPage extends StatelessWidget {
               // Displaying message when there are no orders
               return Scaffold(
                 appBar: AppBar(
-                  title: const Text('Tasks'),
+                  title: const Text('My Orders'),
                 ),
                 body: const Center(
                   child: Text('You have no orders'),
@@ -45,7 +45,7 @@ class OrdersPage extends StatelessWidget {
             // Displaying orders if they exist
             return Scaffold(
               appBar: AppBar(
-                title: const Text('Tasks'),
+                title: const Text('My Orders'),
               ),
               body: ListView.builder(
                 itemCount: state.orders.length,

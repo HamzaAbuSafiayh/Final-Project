@@ -6,9 +6,11 @@ import 'package:finalproject/pages/confirmation_page.dart';
 import 'package:finalproject/pages/homepage.dart';
 import 'package:finalproject/pages/order_details_page.dart';
 import 'package:finalproject/pages/orders_page.dart';
+import 'package:finalproject/pages/payment_methods_page.dart';
 import 'package:finalproject/pages/tasker_profile.dart';
 import 'package:finalproject/pages/tasks_page.dart';
 import 'package:finalproject/routes/app_routes.dart';
+import 'package:finalproject/view_models/categories_cubit/categories_cubit.dart';
 import 'package:finalproject/view_models/chat_cubit/chat_cubit.dart';
 import 'package:finalproject/view_models/reviews_cubit/reviews_cubit.dart';
 import 'package:finalproject/view_models/workers_cubit/workers_cubit.dart';
@@ -18,6 +20,11 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 class AppRouter {
   static Route<dynamic> onGenerateRoute(RouteSettings settings) {
     switch (settings.name) {
+      case AppRoutes.paymentMethods:
+        return MaterialPageRoute(
+          builder: (_) => const PaymentMethodsPage(),
+          settings: settings,
+        );
       case AppRoutes.ordersPage:
         return MaterialPageRoute(
           builder: (_) => const OrdersPage(),
@@ -72,7 +79,14 @@ class AppRouter {
         );
       case AppRoutes.homePage:
         return MaterialPageRoute(
-          builder: (_) => const HomePage(),
+          builder: (_) => BlocProvider(
+            create: (context) {
+              final cubit = CategoriesCubit();
+              cubit.getCategories();
+              return cubit;
+            },
+            child: const HomePage(),
+          ),
           settings: settings,
         );
       case AppRoutes.categoryWorkers:

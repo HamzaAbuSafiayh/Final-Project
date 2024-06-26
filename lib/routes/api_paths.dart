@@ -9,4 +9,8 @@ class ApiPaths {
       'workers/$workerID/customersReviews';
   static String sendRatingAndReview(String workerID) =>
       'workers/$workerID/customersReviews/${DateTime.now()}';
+
+  static String creditCard(String uid, String cardNumber) =>
+      'users/$uid/creditCards/$cardNumber';
+  static String creditCards(String uid) => 'users/$uid/creditCards';
 }

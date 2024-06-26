@@ -29,6 +29,15 @@ class ProfilePage extends StatelessWidget {
         if (state is ProfileLoaded) {
           List<Widget> profileFields = [
             ProfileField(
+                icon: Icon(
+                  Icons.credit_card,
+                  color: Theme.of(context).colorScheme.secondary,
+                ),
+                title: 'Payment Methods',
+                onTap: () {
+                  Navigator.of(context).pushNamed(AppRoutes.paymentMethods);
+                }),
+            ProfileField(
               onTap: () {},
               icon: Icon(
                 Icons.notifications,

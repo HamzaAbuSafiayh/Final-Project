@@ -9,4 +9,5 @@ class AppRoutes {
   static const String tasks = '/tasks';
   static const String orderDetails = '/order-details';
   static const String ordersPage = '/orders';
+  static const String paymentMethods = '/payment-methods';
 }

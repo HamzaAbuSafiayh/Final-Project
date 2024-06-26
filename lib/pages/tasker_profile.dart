@@ -92,7 +92,7 @@ class WorkerProfile extends StatelessWidget {
                       Icon(Icons.check_circle_outline),
                       SizedBox(width: 4),
                       Text(
-                        '117 Furniture Assembly tasks',
+                        '15 Furniture Assembly tasks',
                         style: TextStyle(
                           color: Color.fromRGBO(36, 150, 137, 1),
                           fontWeight: FontWeight.bold,
@@ -194,11 +194,11 @@ class WorkerProfile extends StatelessWidget {
                     ),
                   ),
                   const SizedBox(height: 8),
-                  _buildRatingBar('5 star', 78),
-                  _buildRatingBar('4 star', 0),
-                  _buildRatingBar('3 star', 1),
-                  _buildRatingBar('2 star', 15),
-                  _buildRatingBar('1 star', 6),
+                  _buildRatingBar('5 star', 60),
+                  _buildRatingBar('4 star', 20),
+                  _buildRatingBar('3 star', 20),
+                  _buildRatingBar('2 star', 0),
+                  _buildRatingBar('1 star', 0),
                   const SizedBox(height: 16),
                   const Divider(thickness: 0.3),
                   BlocProvider(
