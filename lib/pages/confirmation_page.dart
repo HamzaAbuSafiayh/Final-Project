@@ -269,7 +269,7 @@ class ConfirmationPage extends StatelessWidget {
                     ),
                   ),
                   child: Text(
-                    'Confirm and chat',
+                    'Confirm',
                     style: TextStyle(
                       fontSize: 16,
                       color: Theme.of(context).textTheme.bodyLarge!.color,

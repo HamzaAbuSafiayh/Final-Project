@@ -26,8 +26,21 @@ class OrdersPage extends StatelessWidget {
             );
           }
           if (state is OrdersError) {
-            return const Center(
-              child: Text('Error loading orders'),
+            return Scaffold(
+              appBar: AppBar(
+                title: const Row(
+                  children: [
+                    Icon(
+                      Icons.error,
+                    ),
+                    SizedBox(width: 8),
+                    Text('My Orders'),
+                  ],
+                ),
+              ),
+              body: const Center(
+                child: Text('Error loading orders'),
+              ),
             );
           }
           if (state is OrdersLoaded) {
@@ -35,17 +48,37 @@ class OrdersPage extends StatelessWidget {
               // Displaying message when there are no orders
               return Scaffold(
                 appBar: AppBar(
-                  title: const Text('My Orders'),
+                  title: Row(
+                    children: [
+                      Icon(Icons.shopping_cart_outlined,
+                          color: Theme.of(context).colorScheme.secondary),
+                      const SizedBox(width: 8),
+                      const Text('My Orders'),
+                    ],
+                  ),
                 ),
                 body: const Center(
-                  child: Text('You have no orders'),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Icon(Icons.inbox, size: 50, color: Colors.grey),
+                      SizedBox(height: 10),
+                      Text('You have no orders'),
+                    ],
+                  ),
                 ),
               );
             }
             // Displaying orders if they exist
             return Scaffold(
               appBar: AppBar(
-                title: const Text('My Orders'),
+                title: const Row(
+                  children: [
+                    Icon(Icons.shopping_cart, color: Colors.white),
+                    SizedBox(width: 8),
+                    Text('My Orders'),
+                  ],
+                ),
               ),
               body: ListView.builder(
                 itemCount: state.orders.length,

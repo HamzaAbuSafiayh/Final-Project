@@ -4,6 +4,7 @@ import 'package:finalproject/routes/api_paths.dart';
 import 'package:finalproject/services/firestore_services.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:ntp/ntp.dart';
 
 abstract class ChatService {
   Future<void> accessChat(String userId, String workerId);
@@ -48,10 +49,11 @@ class ChatServicesImpl extends ChatService {
   @override
   Future<void> sendMessage(
       String userId, String workerId, String content) async {
+    DateTime now = await NTP.now();
     final message = {
       'senderId': userId,
       'message': content,
-      'timestamp': DateTime.now().toIso8601String(),
+      'timestamp': now.toIso8601String(),
     };
 
     try {

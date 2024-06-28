@@ -130,7 +130,8 @@ class _RegisterPageState extends State<RegisterPage> {
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    const Text('A P P N A M E', style: TextStyle(fontSize: 20)),
+                    const Text('H A N D Y P R O',
+                        style: TextStyle(fontSize: 20)),
                     const SizedBox(height: 50),
                     Stack(
                       children: [

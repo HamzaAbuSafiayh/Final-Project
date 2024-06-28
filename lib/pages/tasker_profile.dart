@@ -418,10 +418,30 @@ class WorkerProfile extends StatelessWidget {
                         icon: const Icon(Icons.calendar_today),
                         onPressed: () async {
                           final DateTime? pickedDate = await showDatePicker(
+                            cancelText: 'Cancel',
                             context: context,
                             initialDate: selectedDate0,
                             firstDate: DateTime.now(),
                             lastDate: DateTime(2101),
+                            builder: (BuildContext context, Widget? child) {
+                              return Theme(
+                                data: ThemeData.light().copyWith(
+                                  primaryColor:
+                                      Colors.blue, // Header background color
+
+                                  colorScheme: const ColorScheme.light(
+                                    primary: Colors.blue, // Header text color
+                                    onPrimary:
+                                        Colors.white, // Header background color
+                                    onSurface: Colors.blue, // Body text color
+                                  ),
+                                  dialogBackgroundColor:
+                                      Colors.white, // Background color
+                                  textButtonTheme: const TextButtonThemeData(),
+                                ),
+                                child: child!,
+                              );
+                            },
                           );
                           if (pickedDate != null &&
                               pickedDate != selectedDate0) {
@@ -448,6 +468,59 @@ class WorkerProfile extends StatelessWidget {
                           final TimeOfDay? pickedTime = await showTimePicker(
                             context: context,
                             initialTime: selectedTime0,
+                            builder: (BuildContext context, Widget? child) {
+                              return Theme(
+                                data: ThemeData.light().copyWith(
+                                  primaryColor:
+                                      Colors.blue, // Header background color
+
+                                  colorScheme: const ColorScheme.light(
+                                    primary: Colors.blue, // Header text color
+                                    onPrimary:
+                                        Colors.white, // Header background color
+                                    onSurface: Colors.blue, // Body text color
+                                  ),
+                                  dialogBackgroundColor:
+                                      Colors.white, // Background color
+                                  textButtonTheme: TextButtonThemeData(
+                                    style: TextButton.styleFrom(),
+                                  ),
+                                  timePickerTheme: TimePickerThemeData(
+                                    dialHandColor:
+                                        Colors.blue, // Dial hand color
+                                    dialBackgroundColor:
+                                        Colors.white, // Dial background color
+                                    hourMinuteTextColor:
+                                        MaterialStateColor.resolveWith(
+                                      (states) => Colors
+                                          .blue, // Hour and minute text color
+                                    ),
+                                    hourMinuteColor:
+                                        MaterialStateColor.resolveWith(
+                                      (states) => Colors
+                                          .white, // Hour and minute background color
+                                    ),
+                                    dayPeriodColor:
+                                        MaterialStateColor.resolveWith(
+                                      (states) => states
+                                              .contains(MaterialState.selected)
+                                          ? Colors.lightBlue.shade500
+                                          : Colors
+                                              .white, // AM/PM selector background color
+                                    ),
+                                    dayPeriodTextColor:
+                                        MaterialStateColor.resolveWith(
+                                      (states) => states
+                                              .contains(MaterialState.selected)
+                                          ? Colors.white
+                                          : Colors
+                                              .blue, // AM/PM selector text color
+                                    ),
+                                  ),
+                                ),
+                                child: child!,
+                              );
+                            },
                           );
                           if (pickedTime != null &&
                               pickedTime != selectedTime0) {
